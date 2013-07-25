@@ -14,6 +14,7 @@ namespace Avi_Movie_Player
         private String fileName;
         private HttpRequestUtil requestUtil;
         private static String MOVIE_FILE_DIR = "/Documents";
+        private static String OUTPUT_DIR = "/Documents";
 
         private int width;
         private int height;
@@ -255,7 +256,7 @@ namespace Avi_Movie_Player
             BinaryReader reader = new BinaryReader(File.OpenRead(filePath));
             long byteSum = 0;
             try {
-                wfs = new FileStream(MOVIE_FILE_DIR + "/" + fileName + ".mp3", FileMode.OpenOrCreate, FileAccess.Write);
+                wfs = new FileStream(OUTPUT_DIR + "/" + fileName + ".mp3", FileMode.OpenOrCreate, FileAccess.Write);
 
                 foreach(AviOldIndexEntry entry in audioEntryList) {
                     int size = entry.size;
@@ -283,10 +284,12 @@ namespace Avi_Movie_Player
         public void Play()
         {
             if (state != State.Play) {
-                if (this.targetUri.Scheme == "http") {
-                    this.requestUtil.Completed += this.RequestCallBack;
-                    this.requestUtil.downloadFile(targetUri, MOVIE_FILE_DIR + "/" + fileName);
+                if (targetUri.Scheme == "http") {
+                    requestUtil.Completed += this.RequestCallBack;
+                    requestUtil.downloadFile(targetUri, OUTPUT_DIR + "/" + fileName);
                 } else if (this.targetUri.Scheme == "file") {
+                    fileName = this.targetUri.Segments[targetUri.Segments.Length - 1];
+                    MOVIE_FILE_DIR = targetUri.AbsolutePath.Replace("/" + fileName, "");
                     RequestCallBack(this, EventArgs.Empty);
                 }
             }
@@ -294,7 +297,7 @@ namespace Avi_Movie_Player
 
         public void RequestCallBack(object sender, EventArgs e) {
             ReadLocalMovie(MOVIE_FILE_DIR + "/" + fileName);
-            bgm = new Bgm(MOVIE_FILE_DIR + "/" + fileName + ".mp3");
+            bgm = new Bgm(OUTPUT_DIR + "/" + fileName + ".mp3");
             bgmPlayer = bgm.CreatePlayer();
             bgmPlayer.Volume = 1.0F;
             bgmPlayer.Play();
