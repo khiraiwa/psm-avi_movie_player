@@ -16,7 +16,7 @@ namespace Avi_Movie_Player
             this.Button_Resume.TouchEventReceived += new EventHandler<TouchEventArgs>(resumeButtonClick);
             this.Button_Pause.TouchEventReceived += new EventHandler<TouchEventArgs>(pauseButtonClick);
             this.Button_Stop.TouchEventReceived += new EventHandler<TouchEventArgs>(stopButtonClick);
-            this.UriText.Text = "http://localhost/sample.avi";
+            this.UriText.Text = "file:///Application/contents/output2.avi";
         }
 
         bool isPlay;
@@ -24,7 +24,6 @@ namespace Avi_Movie_Player
         bool isPause;
         bool isStop;
         private void playButtonClick(object sender, TouchEventArgs e) {
-      //      if (e.TouchEventType == TouchEventType.Down) {
             if (!isPlay) {
                 isPlay = true;
                 isResume = false;
@@ -32,13 +31,9 @@ namespace Avi_Movie_Player
                 isStop = false;
                 this.Button_Resume.Visible = true;
                 this.Button_Play.Visible = false;
-             //   Sample.PlayerRunner.play(this.EditableText_1.Text);
+                Uri uri = new Uri(this.UriText.Text);
+                PlayerRunner.getMovie().Play(uri);
             }
-    //        }
-
-       //     dialog = new BusyIndicatorDialog();
-       //     dialog.Show();
-           // Sample.PlayerRunner.play();
         }
 
         private void resumeButtonClick(object sender, TouchEventArgs e) {
@@ -47,7 +42,7 @@ namespace Avi_Movie_Player
                 isResume = true;
                 isPause = false;
                 isStop = false;
-           //     Sample.PlayerRunner.resume();
+                PlayerRunner.getMovie().Resume();
             }
 
         }
@@ -60,7 +55,7 @@ namespace Avi_Movie_Player
                 isResume = false;
                 isPause = true;
                 isStop = false;
-            //    Sample.PlayerRunner.pause();
+                PlayerRunner.getMovie().Pause();
             }
         }
 
@@ -72,7 +67,7 @@ namespace Avi_Movie_Player
                 isStop = true;
                 this.Button_Play.Visible = true;
                 this.Button_Resume.Visible = false;
-            //    Sample.PlayerRunner.stop();
+                PlayerRunner.getMovie().Stop();
             }
         }
 

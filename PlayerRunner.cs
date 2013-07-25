@@ -22,17 +22,17 @@ namespace Avi_Movie_Player
 /**
  * エントリーポイントとなるクラス
  */
-public static class PlayerRunner
+public class PlayerRunner
 {
     private static Movie movie;
     private static GraphicsContext sm_GraphicsContext = null;
 
     static bool loop = true;
 
-    public static void Main(string[] args) {
+    public static void Main(string[] args)
+    {
 
         Init();
-        movie.Play();
         while (loop) {
             SystemEvents.CheckEvents();
             Update();
@@ -41,27 +41,28 @@ public static class PlayerRunner
         Term();
     }
 
-
-
-    ////////////////////////////////////////////////////////////////
-    static void InitUI() {
+    static void InitUI()
+    {
         UISystem.Initialize(sm_GraphicsContext);
         Scene scene = new MoviePlayerScene();
         UISystem.SetScene(scene);
     }
-    static void TermUI() {
+
+    static void TermUI()
+    {
 
     }
-    ////////////////////////////////////////////////////////////////
 
-    static void InitGraphicsContext() {
+    public static void InitGraphicsContext()
+    {
         if (null != sm_GraphicsContext) {
             return;
         }
         sm_GraphicsContext = new GraphicsContext();
     }
 
-    static void TermGraphicsContext() {
+    public static void TermGraphicsContext()
+    {
         if (null == sm_GraphicsContext) {
             return;
         }
@@ -72,7 +73,7 @@ public static class PlayerRunner
 
     public static bool Init()
     {
-        movie = new Movie(new Uri("http://localhost/sample.avi"));
+        movie = new Movie();
         InitGraphicsContext();
         if (null != movie) {
             movie.Init(sm_GraphicsContext);
@@ -85,6 +86,9 @@ public static class PlayerRunner
     /// Terminate
     public static void Term()
     {
+        if (null != movie) {
+            movie.Term();
+        }
         TermUI();
         TermGraphicsContext();
     }
@@ -98,11 +102,10 @@ public static class PlayerRunner
         return true;
     }
 
-    static void UpdateUI() {
+    public static void UpdateUI() {
         List<TouchData> touchDataList = Touch.GetData(0);
         UISystem.Update(touchDataList);
     }
-
 
     public static void Render() {
         if (null == sm_GraphicsContext) {
@@ -118,7 +121,8 @@ public static class PlayerRunner
 
     }
 
-    static void RenderBackground() {
+    public static void RenderBackground()
+    {
         if (null == sm_GraphicsContext) {
             return;
         }
@@ -127,10 +131,15 @@ public static class PlayerRunner
         sm_GraphicsContext.Clear();
     }
 
-    static void RenderUI() {
+    public static void RenderUI()
+    {
         UISystem.Render();
     }
 
+    public static Movie getMovie()
+    {
+        return movie;
+    }
 }
 
 } // PlayerRunner

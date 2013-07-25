@@ -25,6 +25,7 @@ namespace Avi_Movie_Player
         private static List<AviOldIndexEntry> videoEntryList;
 
         private DateTime m_BaseTime;
+        private DateTime m_PauseTime;
 
         private GraphicsContext sm_GraphicsContext = null;
         private Texture2D sm_Texture2D = null;
@@ -61,10 +62,8 @@ namespace Avi_Movie_Player
         public State state = State.None;
 
 
-        public Movie (Uri uri)
+        public Movie ()
         {
-            this.targetUri = uri;
-            this.fileName = uri.Segments[uri.Segments.Length - 1];
             this.requestUtil = new HttpRequestUtil();
         }
 
@@ -81,7 +80,7 @@ namespace Avi_Movie_Player
                 isInitialized = true;
             }
 
-            if (state == State.Play) {
+            if (state == State.Play || state == State.Resume) {
                 SampleDraw.Update();
                 UpdateTexture2D();
             }
@@ -89,7 +88,7 @@ namespace Avi_Movie_Player
 
         public void Render()
         {
-            if (state == State.Play) {
+            if (state == State.Play || state == State.Resume || state == State.Pause) {
                 RenderSprite();
             }
         }
@@ -281,10 +280,13 @@ namespace Avi_Movie_Player
             }
         }
 
-        public void Play()
+        public void Play(Uri uri)
         {
+            this.targetUri = uri;
+            this.fileName = uri.Segments[uri.Segments.Length - 1];
             if (state != State.Play) {
                 if (targetUri.Scheme == "http") {
+                    MOVIE_FILE_DIR = "/Documents";
                     requestUtil.Completed += this.RequestCallBack;
                     requestUtil.downloadFile(targetUri, OUTPUT_DIR + "/" + fileName);
                 } else if (this.targetUri.Scheme == "file") {
@@ -307,17 +309,31 @@ namespace Avi_Movie_Player
 
         public void Pause()
         {
+            bgmPlayer.Pause();
+            m_PauseTime = DateTime.Now;
+
             state = State.Pause;
         }
 
         public void Resume()
         {
+            bgmPlayer.Resume();
+            m_BaseTime += DateTime.Now - m_PauseTime;
 
             state = State.Resume;
         }
 
         public void Stop()
         {
+            bgmPlayer.Stop();
+            bgmPlayer.Dispose();
+            bgm.Dispose();
+    
+            TermSampleSprite();
+            TermTexture2D();
+
+            isInitialized = false;
+
             state = State.Stop;
         }
     }
