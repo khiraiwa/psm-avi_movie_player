@@ -16,7 +16,7 @@ namespace Avi_Movie_Player
             this.Button_Resume.TouchEventReceived += new EventHandler<TouchEventArgs>(resumeButtonClick);
             this.Button_Pause.TouchEventReceived += new EventHandler<TouchEventArgs>(pauseButtonClick);
             this.Button_Stop.TouchEventReceived += new EventHandler<TouchEventArgs>(stopButtonClick);
-            this.UriText.Text = "file:///Application/contents/output2.avi";
+            this.UriText.Text = "file:///Application/contents/output.avi";
         }
 
         bool isPlay;
@@ -48,7 +48,8 @@ namespace Avi_Movie_Player
         }
 
         private void pauseButtonClick(object sender, TouchEventArgs e) {
-            if (isStop) {                return;
+            if (isStop) {
+                return;
             }
             if (!isPause) {
                 isPlay = false;

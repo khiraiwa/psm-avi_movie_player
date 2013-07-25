@@ -5,6 +5,7 @@ using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Imaging;
 using Sce.PlayStation.Core.Audio;
 using Sample;
+using Sce.PlayStation.HighLevel.UI;
 
 namespace Avi_Movie_Player
 {
@@ -32,6 +33,7 @@ namespace Avi_Movie_Player
         private SampleSprite sm_SampleSprite = null;
         private Bgm bgm;
         private BgmPlayer bgmPlayer;
+        private BusyIndicatorDialog dialog = null;
 
         // Buffer for Sprite (Atmic)
         static object sm_LockObjectForBuffer = new object();
@@ -75,6 +77,7 @@ namespace Avi_Movie_Player
         public void Update()
         {
             if (!isInitialized && state == State.Play) {
+                closeDialog();
                 InitTexture2D();
                 InitSampleSprite();
                 isInitialized = true;
@@ -282,9 +285,10 @@ namespace Avi_Movie_Player
 
         public void Play(Uri uri)
         {
+            openDialog();
             this.targetUri = uri;
             this.fileName = uri.Segments[uri.Segments.Length - 1];
-            if (state != State.Play) {
+            if (state == State.None || state == State.Stop) {
                 if (targetUri.Scheme == "http") {
                     MOVIE_FILE_DIR = "/Documents";
                     requestUtil.Completed += this.RequestCallBack;
@@ -297,7 +301,7 @@ namespace Avi_Movie_Player
             }
         }
 
-        public void RequestCallBack(object sender, EventArgs e) {
+        private void RequestCallBack(object sender, EventArgs e) {
             ReadLocalMovie(MOVIE_FILE_DIR + "/" + fileName);
             bgm = new Bgm(OUTPUT_DIR + "/" + fileName + ".mp3");
             bgmPlayer = bgm.CreatePlayer();
@@ -307,34 +311,75 @@ namespace Avi_Movie_Player
             state = State.Play;
         }
 
+        private void openDialog() {
+            dialog = new BusyIndicatorDialog();
+
+            FadeInEffect fadeInEffect = new FadeInEffect(dialog, 500, FadeInEffectInterpolator.Linear);
+            fadeInEffect.EffectStopped += HandleFadeInEffectEffectStopped;
+            fadeInEffect.Start();
+            dialog.Show(fadeInEffect);
+        }
+
+        private void closeDialog() {
+            FadeOutEffect fadeOutEffect = new FadeOutEffect(
+                    dialog, 500, FadeOutEffectInterpolator.Linear);
+            fadeOutEffect.EffectStopped += HandleFadeOutEffectEffectStopped;
+            fadeOutEffect.Start();
+            dialog.Hide(fadeOutEffect);
+        }
+
+        private void HandleFadeOutEffectEffectStopped (object sender, EventArgs e) {
+          /*  bgmPlayer.Play();
+            m_BaseTime = DateTime.Now;
+            isPlayed = true;*/
+        }
+    
+        private void HandleFadeInEffectEffectStopped (object sender, EventArgs e) {
+            /*
+            InitTexture2D();
+            InitSampleSprite();
+            bgm = new Bgm("/Documents/output.mp3");
+            bgmPlayer = bgm.CreatePlayer();
+            bgmPlayer.Volume = 1.0F;
+    
+
+            */
+        }
+
         public void Pause()
         {
-            bgmPlayer.Pause();
-            m_PauseTime = DateTime.Now;
-
-            state = State.Pause;
+            if (state == State.Play) {
+                bgmPlayer.Pause();
+                m_PauseTime = DateTime.Now;
+    
+                state = State.Pause;
+            }
         }
 
         public void Resume()
         {
-            bgmPlayer.Resume();
-            m_BaseTime += DateTime.Now - m_PauseTime;
+            if (state == State.Pause) {
+                bgmPlayer.Resume();
+                m_BaseTime += DateTime.Now - m_PauseTime;
 
-            state = State.Resume;
+                state = State.Play;
+            }
         }
 
         public void Stop()
         {
-            bgmPlayer.Stop();
-            bgmPlayer.Dispose();
-            bgm.Dispose();
+            if (state != State.Stop) {
+                bgmPlayer.Stop();
+                bgmPlayer.Dispose();
+                bgm.Dispose();
     
-            TermSampleSprite();
-            TermTexture2D();
-
-            isInitialized = false;
-
-            state = State.Stop;
+                TermSampleSprite();
+                TermTexture2D();
+    
+                isInitialized = false;
+    
+                state = State.Stop;
+            }
         }
     }
 }
