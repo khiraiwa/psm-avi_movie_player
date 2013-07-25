@@ -316,6 +316,7 @@ namespace Avi_Movie_Player
 
             FadeInEffect fadeInEffect = new FadeInEffect(dialog, 500, FadeInEffectInterpolator.Linear);
             fadeInEffect.EffectStopped += HandleFadeInEffectEffectStopped;
+
             //fadeInEffect.Start();
             dialog.Show(fadeInEffect);
         }
