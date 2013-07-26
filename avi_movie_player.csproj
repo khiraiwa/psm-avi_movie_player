@@ -37,7 +37,6 @@
     <Reference Include="Sce.PlayStation.HighLevel.UI" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PlayerRunner.cs" />
     <Compile Include="RIFFParser.cs" />
     <Compile Include="UIStringTable.cs" />
     <Compile Include="Movie.cs" />
@@ -47,6 +46,7 @@
     <Compile Include="MoviePlayerScene.cs" />
     <Compile Include="BusyIndicatorDialog.composer.cs" />
     <Compile Include="BusyIndicatorDialog.cs" />
+    <Compile Include="AppMain.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="lib\SampleLib\SampleLib.csproj">

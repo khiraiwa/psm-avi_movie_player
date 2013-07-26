@@ -20,9 +20,9 @@ namespace Avi_Movie_Player
 {
 
 /**
- * エントリーポイントとなるクラス
+ * This class is entry point.
  */
-public class PlayerRunner
+public class AppMain
 {
     private static Movie movie;
     private static GraphicsContext sm_GraphicsContext = null;
@@ -136,10 +136,10 @@ public class PlayerRunner
         UISystem.Render();
     }
 
-    public static Movie getMovie()
+    public static Movie GetMovie()
     {
         return movie;
     }
 }
 
-} // PlayerRunner
+} // AppMain

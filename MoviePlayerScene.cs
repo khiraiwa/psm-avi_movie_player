@@ -9,6 +9,11 @@ namespace Avi_Movie_Player
 {
     public partial class MoviePlayerScene : Scene
     {
+        private bool isPlay;
+        private bool isResume;
+        private bool isPause;
+        private bool isStop;
+
         public MoviePlayerScene()
         {
             InitializeWidget();
@@ -19,10 +24,6 @@ namespace Avi_Movie_Player
             this.UriText.Text = "file:///Application/contents/output.avi";
         }
 
-        bool isPlay;
-        bool isResume;
-        bool isPause;
-        bool isStop;
         private void playButtonClick(object sender, TouchEventArgs e) {
             if (!isPlay) {
                 isPlay = true;
@@ -32,7 +33,7 @@ namespace Avi_Movie_Player
                 this.Button_Resume.Visible = true;
                 this.Button_Play.Visible = false;
                 Uri uri = new Uri(this.UriText.Text);
-                PlayerRunner.getMovie().Play(uri);
+                AppMain.GetMovie().Play(uri);
             }
         }
 
@@ -42,7 +43,7 @@ namespace Avi_Movie_Player
                 isResume = true;
                 isPause = false;
                 isStop = false;
-                PlayerRunner.getMovie().Resume();
+                AppMain.GetMovie().Resume();
             }
 
         }
@@ -56,7 +57,7 @@ namespace Avi_Movie_Player
                 isResume = false;
                 isPause = true;
                 isStop = false;
-                PlayerRunner.getMovie().Pause();
+                AppMain.GetMovie().Pause();
             }
         }
 
@@ -68,7 +69,7 @@ namespace Avi_Movie_Player
                 isStop = true;
                 this.Button_Play.Visible = true;
                 this.Button_Resume.Visible = false;
-                PlayerRunner.getMovie().Stop();
+                AppMain.GetMovie().Stop();
             }
         }
 

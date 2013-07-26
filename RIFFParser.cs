@@ -14,7 +14,7 @@ namespace Avi_Movie_Player
         private AviStreamHeader audioStreamHeader;
         private WaveFormatEX waveFormatEX;
         private AviOldIndex aviOldIndex;
-        private long movi_index;
+        private long moviIndex;
 
         public RIFFParser ()
         {
@@ -149,7 +149,7 @@ namespace Avi_Movie_Player
             //    audioStreamHeader.print();
             //    waveFormatEX.print();
                 searchIndex(ref bs, size, ref index, "movi", ref reader);
-                this.movi_index = index + totalOffset;
+                this.moviIndex = index + totalOffset;
 
                 FileInfo info = new FileInfo(filePath);
                 long num = info.Length;
@@ -168,7 +168,7 @@ namespace Avi_Movie_Player
                     if (!end) {
                          break;
                     }
-                    aviOldIndex.addEntrys(ref bs, index);
+                    aviOldIndex.AddEntrys(ref bs, index);
                     index += 16;
                 }
 
@@ -181,42 +181,49 @@ namespace Avi_Movie_Player
             }
 
         }
-        public AviMainHeader getAviMainHeader() {
+
+        public AviMainHeader GetAviMainHeader() {
             return this.mainHeader;
         }
-        public AviStreamHeader getAviVideoStreamHeader() {
+
+        public AviStreamHeader GetAviVideoStreamHeader() {
             return this.videoStreamHeader;
         }
-        public AviStreamHeader getAviAudioStreamHeader() {
+
+        public AviStreamHeader GetAviAudioStreamHeader() {
             return this.audioStreamHeader;
         }
-        public BitmapInfo getBitmapInfo() {
+
+        public BitmapInfo GetBitmapInfo() {
             return this.bitmapInfo;
         }
-        public WaveFormatEX getWaveFormatEx() {
+
+        public WaveFormatEX GetWaveFormatEx() {
             return this.waveFormatEX;
         }
-        public AviOldIndex getAviOldIndex() {
+
+        public AviOldIndex GetAviOldIndex() {
             return this.aviOldIndex;
         }
-        public long getMoviIndex() {
-            return this.movi_index;
+
+        public long GetMoviIndex() {
+            return this.moviIndex;
         }
     }
 
     public class AviMainHeader {
-        public String fcc;
-        public int cb;
-        public int microSecPerFrame;
-        public int maxBytesPerSec;
-        public int paddingGranularity;
-        public int flags;
-        public int totalFrames;
-        public int initialFrames;
-        public int streams;
-        public int suggestedBufferSize;
-        public int width;
-        public int height;
+        private String fcc;
+        private int cb;
+        private int microSecPerFrame;
+        private int maxBytesPerSec;
+        private int paddingGranularity;
+        private int flags;
+        private int totalFrames;
+        private int initialFrames;
+        private int streams;
+        private int suggestedBufferSize;
+        private int width;
+        private int height;
 
         public AviMainHeader(ref byte[] contents, long offset) {
             byte[] dwfcc = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
@@ -246,7 +253,7 @@ namespace Avi_Movie_Player
             height = BitConverter.ToInt32(dwHeight, 0);
         }
 
-        public void print() {
+        public void Print() {
             Console.WriteLine("fcc = " + fcc);
             Console.WriteLine("cb = " + cb);
             Console.WriteLine("microSecPerFrame = " + microSecPerFrame);
@@ -259,6 +266,22 @@ namespace Avi_Movie_Player
             Console.WriteLine("suggestedBufferSize = " + suggestedBufferSize);
             Console.WriteLine("width = " + width);
             Console.WriteLine("height = " + height);
+        }
+
+        public int GetMicroSecPerFrame() {
+            return this.microSecPerFrame;
+        }
+
+        public int GetTotalFrames() {
+            return this.totalFrames;
+        }
+
+        public int GetWidth() {
+            return this.width;
+        }
+
+        public int GetHeight() {
+            return this.height;
         }
     }
 
@@ -279,11 +302,13 @@ namespace Avi_Movie_Player
         private int quality;
         private int sampleSize;
         private RcFrame rcFrame;
+
         class RcFrame {
             private short left;
             private short top;
             private short right;
             private short buttom;
+
             public RcFrame(ref byte[] contents, long offset) {
                 byte[] wleft = {contents[offset++], contents[offset++]};
                 byte[] wtop = {contents[offset++], contents[offset++]};
@@ -294,13 +319,14 @@ namespace Avi_Movie_Player
                 right = BitConverter.ToInt16(wright, 0);
                 buttom = BitConverter.ToInt16(wbottom, 0);
             }
-            public void print() {
+            public void Print() {
                 Console.WriteLine("left = " + left);
                 Console.WriteLine("top = " + top);
                 Console.WriteLine("right = " + right);
                 Console.WriteLine("buttom = " + buttom);
             }
         }
+
         public AviStreamHeader(ref byte[] contents, long offset) {
             byte[] dwfcc = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
             byte[] dwcb = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
@@ -335,7 +361,8 @@ namespace Avi_Movie_Player
             quality = BitConverter.ToInt32(dwQuality, 0);
             sampleSize = BitConverter.ToInt32(dwSampleSize, 0);
         }
-        public void print() {
+
+        public void Print() {
             Console.WriteLine("fcc = " + fcc);
             Console.WriteLine("cb = " + cb);
             Console.WriteLine("fccType = " + fccType);
@@ -351,7 +378,7 @@ namespace Avi_Movie_Player
             Console.WriteLine("suggetedBufferSize = " + suggetedBufferSize);
             Console.WriteLine("quality = " + quality);
             Console.WriteLine("sampleSize = " + sampleSize);
-            this.rcFrame.print();
+            this.rcFrame.Print();
         }
     }
 
@@ -361,6 +388,7 @@ namespace Avi_Movie_Player
     public class BitmapInfo {
         private BitmapInfoHeader bitmapHeader;
         private RGBQuad rgb;
+
         class BitmapInfoHeader {
             private int size;
             private int width;
@@ -399,7 +427,7 @@ namespace Avi_Movie_Player
                 clrImportant = BitConverter.ToInt32(biClrImportant, 0);
             }
 
-            public void print() {
+            public void Print() {
                 Console.WriteLine("size = " + size);
                 Console.WriteLine("width = " + width);
                 Console.WriteLine("height = " + height);
@@ -413,18 +441,21 @@ namespace Avi_Movie_Player
                 Console.WriteLine("clrImportant = " + clrImportant);
             }
         }
+
         class RGBQuad {
             private byte rgbBlue;
             private byte rgbGreen;
             private byte rgbRed;
             private byte rgbReserved;
+
             public RGBQuad(ref byte[] contents, long offset) {
                 rgbBlue = contents[offset++];
                 rgbGreen = contents[offset++];
                 rgbRed = contents[offset++];
                 rgbReserved = contents[offset++];
             }
-            public void print() {
+
+            public void Print() {
                 Console.WriteLine("rgbBlue = " + rgbBlue);
                 Console.WriteLine("rgbGreen = " + rgbGreen);
                 Console.WriteLine("rgbRed = " + rgbRed);
@@ -432,13 +463,15 @@ namespace Avi_Movie_Player
 
             }
         }
+
         public BitmapInfo(ref byte[] contents, long offset) {
             bitmapHeader = new BitmapInfoHeader(ref contents, offset);
             rgb = new RGBQuad(ref contents, offset);
         }
-        public void print() {
-            bitmapHeader.print();
-            rgb.print();
+
+        public void Print() {
+            bitmapHeader.Print();
+            rgb.Print();
         }
     }
 
@@ -471,7 +504,7 @@ namespace Avi_Movie_Player
             bitsPerSample = BitConverter.ToInt16(wBitsPerSample, 0);
             cbSize = BitConverter.ToInt16(wcbSize, 0);
         }
-        public void print() {
+        public void Print() {
             Console.WriteLine("formatTag = " + formatTag);
             Console.WriteLine("channels = " + channels);
             Console.WriteLine("samplesPerSec = " + samplesPerSec);
@@ -485,8 +518,8 @@ namespace Avi_Movie_Player
     public class AviOldIndex {
         private string fcc;
         private int cb;
-        public List<AviOldIndexEntry> videoEntry = new List<AviOldIndexEntry>();
-        public List<AviOldIndexEntry> audioEntry = new List<AviOldIndexEntry>();
+        private List<AviOldIndexEntry> videoEntry = new List<AviOldIndexEntry>();
+        private List<AviOldIndexEntry> audioEntry = new List<AviOldIndexEntry>();
 
         public AviOldIndex(ref byte[] contents, long offset) {
             byte[] dwfcc = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
@@ -495,35 +528,40 @@ namespace Avi_Movie_Player
             this.cb = BitConverter.ToInt32(dwcb, 0);
         }
 
-        public void addEntrys(ref byte[] contents, long offset) {
+        public void AddEntrys(ref byte[] contents, long offset) {
             AviOldIndexEntry aviOldIndexEntry = new AviOldIndexEntry(ref contents, offset);
-            if (aviOldIndexEntry.chunkId.Equals("00dc")) {
+            if (aviOldIndexEntry.GetChunkId().Equals("00dc")) {
                 videoEntry.Add(aviOldIndexEntry);
-            } else if (aviOldIndexEntry.chunkId.Equals("01wb")) {
+            } else if (aviOldIndexEntry.GetChunkId().Equals("01wb")) {
                 audioEntry.Add(aviOldIndexEntry);
             }
         }
 
-        public void print() {
+        public void Print() {
             Console.WriteLine("fcc = " + fcc);
             Console.WriteLine("cb = " + cb);
-            /*
             foreach(AviOldIndexEntry entry in videoEntry) {
-                entry.print();
+                entry.Print();
             }
             foreach(AviOldIndexEntry entry in audioEntry) {
-                entry.print();
+                entry.Print();
             }
-            */
         }
 
+        public List<AviOldIndexEntry> GetVideoEntry() {
+            return this.videoEntry;
+        }
+
+        public List<AviOldIndexEntry> GetAudioEntry() {
+            return this.audioEntry;
+        }
     }
 
     public class AviOldIndexEntry {
-        public String chunkId;
-        public int flags;
-        public int offset;
-        public int size;
+        private String chunkId;
+        private int flags;
+        private int offset;
+        private int size;
 
         public AviOldIndexEntry(ref byte[] contents, long offset) {
             byte[] dwChunkId = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
@@ -537,11 +575,27 @@ namespace Avi_Movie_Player
             this.size = BitConverter.ToInt32(dwSize, 0);
         }
 
-        public void print() {
+        public void Print() {
             Console.WriteLine("chunkId = " + chunkId);
             Console.WriteLine("flags = " + flags);
             Console.WriteLine("offset = " + offset);
             Console.WriteLine("size = " + size);
+        }
+
+        public String GetChunkId() {
+            return this.chunkId;
+        }
+
+        public int GetFlags() {
+            return this.flags;
+        }
+
+        public int GetOffset() {
+            return this.offset;
+        }
+
+        public int GetSize() {
+            return this.size;
         }
     }
 }

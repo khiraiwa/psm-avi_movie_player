@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Collections.Generic;
 using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Imaging;
@@ -14,8 +15,8 @@ namespace Avi_Movie_Player
         private Uri targetUri;
         private String fileName;
         private HttpRequestUtil requestUtil;
-        private static String MOVIE_FILE_DIR = "/Documents";
-        private static String OUTPUT_DIR = "/Documents";
+        private static String movieFileDir = "/Documents";
+        private static String outputDir = "/Documents";
 
         private int width;
         private int height;
@@ -51,7 +52,7 @@ namespace Avi_Movie_Player
             }
         }
 
-        // 同期関連
+        // for synchronization
         private bool isInitialized;
         public enum State
         {
@@ -153,9 +154,9 @@ namespace Avi_Movie_Player
             Console.WriteLine(index);
 
             AviOldIndexEntry entry = videoEntryList[index];
-            int size = entry.size;
-            int offset = entry.offset;
-            BinaryReader reader = new BinaryReader(File.OpenRead(MOVIE_FILE_DIR + "/" + fileName));
+            int size = entry.GetSize();
+            int offset = entry.GetOffset();
+            BinaryReader reader = new BinaryReader(File.OpenRead(movieFileDir + "/" + fileName));
             reader.BaseStream.Seek(movi_index + 4 + 4 + offset, SeekOrigin.Begin);
             byte[] tmp = reader.ReadBytes(size);
             reader.Close();
@@ -226,7 +227,7 @@ namespace Avi_Movie_Player
         }
         ////////////////////////////////////////////////////////////////
 
-        private void ReadLocalMovie(String filePath)
+        private void readLocalMovie(String filePath)
         {
             if (!File.Exists(filePath)) {
                 Console.WriteLine("{0} does not exist.", filePath);
@@ -236,33 +237,33 @@ namespace Avi_Movie_Player
             RIFFParser parser = new RIFFParser();
             parser.parse(filePath);
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
-            AviMainHeader mainHeader = parser.getAviMainHeader();
-            microSecPerFrame = mainHeader.microSecPerFrame;
-            totalFrames = mainHeader.totalFrames;
-            width = mainHeader.width;
-            height = mainHeader.height;
-            AviOldIndex aviOldIndex = parser.getAviOldIndex();
-            videoEntryList = aviOldIndex.videoEntry;
-            audioEntryList = aviOldIndex.audioEntry;
-            movi_index = (int)parser.getMoviIndex();
+            AviMainHeader mainHeader = parser.GetAviMainHeader();
+            microSecPerFrame = mainHeader.GetMicroSecPerFrame();
+            totalFrames = mainHeader.GetTotalFrames();
+            width = mainHeader.GetWidth();
+            height = mainHeader.GetHeight();
+            AviOldIndex aviOldIndex = parser.GetAviOldIndex();
+            videoEntryList = aviOldIndex.GetVideoEntry();
+            audioEntryList = aviOldIndex.GetAudioEntry();
+            movi_index = (int)parser.GetMoviIndex();
 
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
-            WriteMp3Data(MOVIE_FILE_DIR + "/" + fileName);
+            writeMp3Data(movieFileDir + "/" + fileName);
 
         }
 
-        private void WriteMp3Data(String filePath)
+        private void writeMp3Data(String filePath)
         {
             FileStream wfs = null;
             byte[] musicBytes = new byte[0];
             BinaryReader reader = new BinaryReader(File.OpenRead(filePath));
             long byteSum = 0;
             try {
-                wfs = new FileStream(OUTPUT_DIR + "/" + fileName + ".mp3", FileMode.OpenOrCreate, FileAccess.Write);
+                wfs = new FileStream(outputDir + "/" + fileName + ".mp3", FileMode.OpenOrCreate, FileAccess.Write);
 
                 foreach(AviOldIndexEntry entry in audioEntryList) {
-                    int size = entry.size;
-                    int dataOffset = entry.offset;
+                    int size = entry.GetSize();
+                    int dataOffset = entry.GetOffset();
 
                     reader.BaseStream.Seek(movi_index + 4 + 4 + dataOffset, SeekOrigin.Begin);
                     byte[] tmp = reader.ReadBytes(size);
@@ -290,20 +291,24 @@ namespace Avi_Movie_Player
             this.fileName = uri.Segments[uri.Segments.Length - 1];
             if (state == State.None || state == State.Stop) {
                 if (targetUri.Scheme == "http") {
-                    MOVIE_FILE_DIR = "/Documents";
-                    requestUtil.Completed += this.RequestCallBack;
-                    requestUtil.downloadFile(targetUri, OUTPUT_DIR + "/" + fileName);
+                    movieFileDir = "/Documents";
+                    requestUtil.Completed += this.startMovie;
+                    requestUtil.DownloadFile(targetUri, outputDir + "/" + fileName);
                 } else if (this.targetUri.Scheme == "file") {
                     fileName = this.targetUri.Segments[targetUri.Segments.Length - 1];
-                    MOVIE_FILE_DIR = targetUri.AbsolutePath.Replace("/" + fileName, "");
-                    RequestCallBack(this, EventArgs.Empty);
+                    movieFileDir = targetUri.AbsolutePath.Replace("/" + fileName, "");
+                    Thread thread = new Thread(new ThreadStart(startMovie));
+                    thread.Start();
                 }
             }
         }
 
-        private void RequestCallBack(object sender, EventArgs e) {
-            ReadLocalMovie(MOVIE_FILE_DIR + "/" + fileName);
-            bgm = new Bgm(OUTPUT_DIR + "/" + fileName + ".mp3");
+        private void startMovie(object sender, EventArgs e) {
+            startMovie();
+        }
+        private void startMovie() {
+            readLocalMovie(movieFileDir + "/" + fileName);
+            bgm = new Bgm(outputDir + "/" + fileName + ".mp3");
             bgmPlayer = bgm.CreatePlayer();
             bgmPlayer.Volume = 1.0F;
             bgmPlayer.Play();
@@ -315,7 +320,7 @@ namespace Avi_Movie_Player
             dialog = new BusyIndicatorDialog();
 
             FadeInEffect fadeInEffect = new FadeInEffect(dialog, 500, FadeInEffectInterpolator.Linear);
-            fadeInEffect.EffectStopped += HandleFadeInEffectEffectStopped;
+            fadeInEffect.EffectStopped += handleFadeInEffectEffectStopped;
 
             //fadeInEffect.Start();
             dialog.Show(fadeInEffect);
@@ -324,26 +329,26 @@ namespace Avi_Movie_Player
         private void closeDialog() {
             FadeOutEffect fadeOutEffect = new FadeOutEffect(
                     dialog, 500, FadeOutEffectInterpolator.Linear);
-            fadeOutEffect.EffectStopped += HandleFadeOutEffectEffectStopped;
+            fadeOutEffect.EffectStopped += handleFadeOutEffectEffectStopped;
             fadeOutEffect.Start();
             dialog.Hide(fadeOutEffect);
         }
 
-        private void HandleFadeOutEffectEffectStopped (object sender, EventArgs e) {
-          /*  bgmPlayer.Play();
+        private void handleFadeOutEffectEffectStopped (object sender, EventArgs e) {
+            /*
+            bgmPlayer.Play();
             m_BaseTime = DateTime.Now;
-            isPlayed = true;*/
+            isPlayed = true;
+            */
         }
     
-        private void HandleFadeInEffectEffectStopped (object sender, EventArgs e) {
+        private void handleFadeInEffectEffectStopped (object sender, EventArgs e) {
             /*
             InitTexture2D();
             InitSampleSprite();
             bgm = new Bgm("/Documents/output.mp3");
             bgmPlayer = bgm.CreatePlayer();
             bgmPlayer.Volume = 1.0F;
-    
-
             */
         }
 

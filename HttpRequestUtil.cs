@@ -6,6 +6,16 @@ namespace Avi_Movie_Player
 {
     public class HttpRequestUtil
     {
+        private byte[] readBuffer;
+        private string statusCode;
+        private long contentLength;
+        private int totalReadSize;
+        private const int maxReadSize = 1024;
+        private FileStream  dfs = null;
+        private String downloadPath = "/Documents";
+        private String fileName;
+
+        public ConnectState State = ConnectState.None;
         public event EventHandler Completed;
 
         public enum ConnectState
@@ -16,29 +26,18 @@ namespace Avi_Movie_Player
             Success,
             Failed
         }
-        private byte[] readBuffer;
-        public ConnectState connectState = ConnectState.None;
-        private string statusCode;
-        private long contentLength;
-        private int totalReadSize;
-        private const int maxReadSize = 1024;
-        private FileStream  dfs = null;
-        private String DOWNLOAD_PATH = "/Documents";
-        private String fileName;
 
-        public bool downloadFile(Uri uri, String fileName) {
+        public bool DownloadFile(Uri uri, String fileName) {
             this.fileName = fileName;
             statusCode = "Unknown";
             contentLength = 0;
             try {
                 WebRequest webRequest = HttpWebRequest.Create(uri);
-                // If you use web proxy, uncomment this and set appropriate address.
-                //webRequest.Proxy = new System.Net.WebProxy("http://your_proxy.com:10080");
                 webRequest.BeginGetResponse(new AsyncCallback(requestCallBack), webRequest);
-                connectState = ConnectState.Connect;
+                State = ConnectState.Connect;
             } catch (Exception e) {
                 Console.WriteLine(e);
-                connectState = ConnectState.Failed;
+                State = ConnectState.Failed;
                 return false;
             }
             return true;
@@ -61,7 +60,7 @@ namespace Avi_Movie_Player
                 stream.BeginRead(readBuffer, 0, readBuffer.Length, new AsyncCallback(readCallBack), stream);
             } catch (Exception e) {
                 Console.WriteLine(e);
-                connectState = ConnectState.Failed;
+                State = ConnectState.Failed;
             }
         }
 
@@ -86,9 +85,9 @@ namespace Avi_Movie_Player
                     dfs.Dispose();
     
                     stream.Close();
-                    connectState = ConnectState.Success;
+                    State = ConnectState.Success;
                     Console.WriteLine("connect close!!:" +  readSize);
-                    OnCompleted(EventArgs.Empty);
+                    onCompleted(EventArgs.Empty);
 
                } else {
                     stream.BeginRead(readBuffer, 0, readBuffer.Length, new AsyncCallback(readCallBack), stream);
@@ -96,11 +95,11 @@ namespace Avi_Movie_Player
                 }
             } catch (Exception e) {
                 Console.WriteLine(e);
-                connectState = ConnectState.Failed;
+                State = ConnectState.Failed;
             }
         }
 
-        private void OnCompleted(EventArgs e)
+        private void onCompleted(EventArgs e)
         {
             if (Completed != null) {
                 Completed(this, e);
