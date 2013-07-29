@@ -36,7 +36,61 @@ By default, SampleLib is installed on the following directory.
 Copy this lib direcoty to project root direcoty as below.
 
     psm-avi_movie_player
+    　├avi_movie_player.sln
+    　├AppMain.cs
+    　・
+    　・
+    　・
     　└lib
     　　└SampleLib
 
-Finally, run avi_movie_player.sln and build this project.
+Finally, run avi_movie_player.sln by use of PsmStudio.
+And build this project.
+
+## Run
+
+Set project of avi movie player for start up.
+And run this solution using Playstation mobile Simulator or PS Vita, etc.
+
+Then sample app is run.
+
+You can use URI for location of avi movie.
+Currently, this project supports scheme of http and file.
+
+For example,
+
+    http://127.0.0.1/output.avi
+    file:///Documents/contents/output.avi
+
+## Usage
+The class of Avi_Movie_Player.Movie is important.
+
+Create this class object.
+
+    Movie movie = new Movie();
+    
+Initialize Movie class with an argument of Sce.PlayStation.Core.Graphics.GraphicsContext.
+
+    movie.Init(graphicsContext);
+
+Update this object.
+
+    movie.Update();
+
+Render  this object.
+
+    movie.Render();
+
+Term  this object.
+
+    movie.Term();
+
+Please see AppMain.cs.
+
+## Appendix
+
+### How to create avi movie file.
+
+Run the following command using ffmpeg.
+
+    $ ffmpeg -i [input video] -vcodec mjpeg -acodec mp3 output.avi
