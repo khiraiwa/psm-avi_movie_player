@@ -130,11 +130,6 @@ public class AppMain
     {
         UISystem.Render();
     }
-
-    public static Movie GetMovie()
-    {
-        return movie;
-    }
 }
 
 } // AppMain

@@ -50,6 +50,7 @@
     <Compile Include="MoviePlayer.cs" />
     <Compile Include="ErrorDialog.composer.cs" />
     <Compile Include="ErrorDialog.cs" />
+    <Compile Include="MainThreadUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="lib\SampleLib\SampleLib.csproj">

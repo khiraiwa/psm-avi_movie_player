@@ -158,8 +158,8 @@ namespace Avi_Movie_Player
             Console.WriteLine(index);
 
             AviOldIndexEntry entry = videoEntryList[index];
-            int size = entry.GetSize();
-            int offset = entry.GetOffset();
+            int size = entry.Size;
+            int offset = entry.Offset;
             BinaryReader reader = new BinaryReader(File.OpenRead(movieFileDir + "/" + fileName));
             reader.BaseStream.Seek(movi_index + 4 + 4 + offset, SeekOrigin.Begin);
             byte[] tmp = reader.ReadBytes(size);
@@ -235,23 +235,21 @@ namespace Avi_Movie_Player
         {
             if (!File.Exists(filePath)) {
                 Console.WriteLine("{0} does not exist.", filePath);
-                ErrorDialog errorDialog = new ErrorDialog();
-                errorDialog.Show();
                 return;
             }
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
             RIFFParser parser = new RIFFParser();
             parser.parse(filePath);
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
-            AviMainHeader mainHeader = parser.GetAviMainHeader();
-            microSecPerFrame = mainHeader.GetMicroSecPerFrame();
-            totalFrames = mainHeader.GetTotalFrames();
-            width = mainHeader.GetWidth();
-            height = mainHeader.GetHeight();
-            AviOldIndex aviOldIndex = parser.GetAviOldIndex();
-            videoEntryList = aviOldIndex.GetVideoEntry();
-            audioEntryList = aviOldIndex.GetAudioEntry();
-            movi_index = (int)parser.GetMoviIndex();
+            AviMainHeader mainHeader = parser.AviMainHeader;
+            microSecPerFrame = mainHeader.MicroSecPerFrame;
+            totalFrames = mainHeader.TotalFrames;
+            width = mainHeader.Width;
+            height = mainHeader.Height;
+            AviOldIndex aviOldIndex = parser.AviOldIndex;
+            videoEntryList = aviOldIndex.VideoEntry;
+            audioEntryList = aviOldIndex.AudioEntry;
+            movi_index = (int)parser.MoviIndex;
 
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
             writeMp3Data(movieFileDir + "/" + fileName);
@@ -268,8 +266,8 @@ namespace Avi_Movie_Player
                 wfs = new FileStream(outputDir + "/" + fileName + ".mp3", FileMode.OpenOrCreate, FileAccess.Write);
 
                 foreach(AviOldIndexEntry entry in audioEntryList) {
-                    int size = entry.GetSize();
-                    int dataOffset = entry.GetOffset();
+                    int size = entry.Size;
+                    int dataOffset = entry.Offset;
 
                     reader.BaseStream.Seek(movi_index + 4 + 4 + dataOffset, SeekOrigin.Begin);
                     byte[] tmp = reader.ReadBytes(size);

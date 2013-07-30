@@ -8,13 +8,41 @@ namespace Avi_Movie_Player
     public class RIFFParser
     {
         private long totalOffset = 0;
-        private AviMainHeader mainHeader;
-        private AviStreamHeader videoStreamHeader;
-        private BitmapInfo bitmapInfo;
-        private AviStreamHeader audioStreamHeader;
-        private WaveFormatEX waveFormatEX;
-        private AviOldIndex aviOldIndex;
-        private long moviIndex;
+        public AviMainHeader AviMainHeader
+        {
+            get;
+            private set;
+        }
+        public AviStreamHeader VideoStreamHeader
+        {
+            get;
+            private set;
+        }
+        public BitmapInfo BitmapInfo
+        {
+           　get;
+            private set;
+        }
+        public AviStreamHeader AudioStreamHeader
+        {
+            get;
+            private set;
+        }
+        public WaveFormatEX WaveFormatEX
+        {
+            get;
+            private set;
+        }
+        public AviOldIndex AviOldIndex
+        {
+            get;
+            private set;
+        }
+        public long MoviIndex
+        {
+            get;
+            private set;
+        }
 
         public RIFFParser ()
         {
@@ -122,42 +150,42 @@ namespace Avi_Movie_Player
                 searchIndex(ref bs, size, ref index, "avih", ref reader);
                 int avihSize = 56;
                 shiftIndex(ref bs, size, ref index, avihSize, ref reader);
-                mainHeader = new AviMainHeader(ref bs, index);
+                AviMainHeader = new AviMainHeader(ref bs, index);
                 searchIndex(ref bs, size, ref index, "strh", ref reader);
                                 Console.WriteLine(index + totalOffset);
                 int strhSize = 56;
                 shiftIndex(ref bs, size, ref index, strhSize, ref reader);
-                videoStreamHeader = new AviStreamHeader(ref bs, index);
+                VideoStreamHeader = new AviStreamHeader(ref bs, index);
                 searchIndex(ref bs, size, ref index, "strf", ref reader);
                                 Console.WriteLine(index + totalOffset);
                 int bitmapInfoSize = 44 + 8;
                 shiftIndex(ref bs, size, ref index, bitmapInfoSize, ref reader);
-                bitmapInfo = new BitmapInfo(ref bs, index + 8);
+                BitmapInfo = new BitmapInfo(ref bs, index + 8);
                 searchIndex(ref bs, size, ref index, "strh", ref reader);
                                 Console.WriteLine(index + totalOffset);
                 shiftIndex(ref bs, size, ref index, strhSize, ref reader);
-                audioStreamHeader = new AviStreamHeader(ref bs, index);
+                AudioStreamHeader = new AviStreamHeader(ref bs, index);
                 searchIndex(ref bs, size, ref index, "strf", ref reader);
                                 Console.WriteLine(index + totalOffset);
                 int waveFormatSize = 24 + 8;
                 shiftIndex(ref bs, size, ref index, waveFormatSize, ref reader);
-                waveFormatEX = new WaveFormatEX(ref bs, index + 8);
+                WaveFormatEX = new WaveFormatEX(ref bs, index + 8);
 
                 Console.WriteLine("videoheader start");
-                videoStreamHeader.Print();
+                VideoStreamHeader.Print();
                 Console.WriteLine("videoheader end");
                 Console.WriteLine("bitmap start");
-                bitmapInfo.Print();
+                BitmapInfo.Print();
                 Console.WriteLine("bitmap end");
                 Console.WriteLine("audioheader start");
-                audioStreamHeader.Print();
+                AudioStreamHeader.Print();
                 Console.WriteLine("audioheader end");
                 Console.WriteLine("wave start");
-                waveFormatEX.Print();
+                WaveFormatEX.Print();
                 Console.WriteLine("wave end");
 
                 searchIndex(ref bs, size, ref index, "movi", ref reader);
-                this.moviIndex = index + totalOffset;
+                this.MoviIndex = index + totalOffset;
 
                 FileInfo info = new FileInfo(filePath);
                 long num = info.Length;
@@ -169,14 +197,14 @@ namespace Avi_Movie_Player
                 searchIndexFromBack(ref bs, size, ref index, "idx1", ref reader);
                 int idxSize = 8;
                 shiftIndex(ref bs, size, ref index, idxSize, ref reader);
-                aviOldIndex = new AviOldIndex(ref bs, index);
+                AviOldIndex = new AviOldIndex(ref bs, index);
                 index += idxSize;
                 for (;;) {
                     bool end = shiftIndex(ref bs, size, ref index, 16, ref reader);
                     if (!end) {
                          break;
                     }
-                    aviOldIndex.AddEntrys(ref bs, index);
+                    AviOldIndex.AddEntrys(ref bs, index);
                     index += 16;
                 }
 
@@ -189,49 +217,69 @@ namespace Avi_Movie_Player
             }
 
         }
-
-        public AviMainHeader GetAviMainHeader() {
-            return this.mainHeader;
-        }
-
-        public AviStreamHeader GetAviVideoStreamHeader() {
-            return this.videoStreamHeader;
-        }
-
-        public AviStreamHeader GetAviAudioStreamHeader() {
-            return this.audioStreamHeader;
-        }
-
-        public BitmapInfo GetBitmapInfo() {
-            return this.bitmapInfo;
-        }
-
-        public WaveFormatEX GetWaveFormatEx() {
-            return this.waveFormatEX;
-        }
-
-        public AviOldIndex GetAviOldIndex() {
-            return this.aviOldIndex;
-        }
-
-        public long GetMoviIndex() {
-            return this.moviIndex;
-        }
     }
 
     public class AviMainHeader {
-        private String fcc;
-        private int cb;
-        private int microSecPerFrame;
-        private int maxBytesPerSec;
-        private int paddingGranularity;
-        private int flags;
-        private int totalFrames;
-        private int initialFrames;
-        private int streams;
-        private int suggestedBufferSize;
-        private int width;
-        private int height;
+        public String Fcc
+        {
+            get;
+            private set;
+        }
+        public int Cb
+        {
+            get;
+            private set;
+        }
+        public int MicroSecPerFrame
+        {
+            get;
+            private set;
+        }
+        public int MaxBytesPerSec
+        {
+            get;
+            private set;
+        }
+        public int PaddingGranularity
+        {
+            get;
+            private set;
+        }
+        public int Flags
+        {
+            get;
+            private set;
+        }
+        public int TotalFrames
+        {
+            get;
+            private set;
+        }
+        public int InitialFrames
+        {
+            get;
+            private set;
+        }
+        public int Streams
+        {
+            get;
+            private set;
+        }
+        public int SuggestedBufferSize
+        {
+            get;
+            private set;
+        }
+        public int Width
+        {
+            get;
+            private set;
+        }
+        public int Height
+        {
+            get;
+            private set;
+        }
 
         public AviMainHeader(ref byte[] contents, long offset) {
             byte[] dwfcc = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
@@ -247,91 +295,155 @@ namespace Avi_Movie_Player
             byte[] dwWidth = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
             byte[] dwHeight = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
 
-            fcc = Encoding.ASCII.GetString(dwfcc);
-            cb = BitConverter.ToInt32(dwcb, 0);
-            microSecPerFrame = BitConverter.ToInt32(dwMicroSecPerFrame, 0);
-            maxBytesPerSec = BitConverter.ToInt32(dwMaxBytesPerSec, 0);
-            paddingGranularity = BitConverter.ToInt32(dwPaddingGranularity, 0);
-            flags = BitConverter.ToInt32(dwFlags, 0);
-            totalFrames = BitConverter.ToInt32(dwTotalFrames, 0);
-            initialFrames = BitConverter.ToInt32(dwInitialFrames, 0);
-            streams = BitConverter.ToInt32(dwStreams, 0);
-            suggestedBufferSize = BitConverter.ToInt32(dwSuggestedBufferSize, 0);
-            width = BitConverter.ToInt32(dwWidth, 0);
-            height = BitConverter.ToInt32(dwHeight, 0);
+            Fcc = Encoding.ASCII.GetString(dwfcc);
+            Cb = BitConverter.ToInt32(dwcb, 0);
+            MicroSecPerFrame = BitConverter.ToInt32(dwMicroSecPerFrame, 0);
+            MaxBytesPerSec = BitConverter.ToInt32(dwMaxBytesPerSec, 0);
+            PaddingGranularity = BitConverter.ToInt32(dwPaddingGranularity, 0);
+            Flags = BitConverter.ToInt32(dwFlags, 0);
+            TotalFrames = BitConverter.ToInt32(dwTotalFrames, 0);
+            InitialFrames = BitConverter.ToInt32(dwInitialFrames, 0);
+            Streams = BitConverter.ToInt32(dwStreams, 0);
+            SuggestedBufferSize = BitConverter.ToInt32(dwSuggestedBufferSize, 0);
+            Width = BitConverter.ToInt32(dwWidth, 0);
+            Height = BitConverter.ToInt32(dwHeight, 0);
         }
 
         public void Print() {
-            Console.WriteLine("fcc = " + fcc);
-            Console.WriteLine("cb = " + cb);
-            Console.WriteLine("microSecPerFrame = " + microSecPerFrame);
-            Console.WriteLine("maxBytesPerSec = " + maxBytesPerSec);
-            Console.WriteLine("paddingGranularity = " + paddingGranularity);
-            Console.WriteLine("flags = " + flags);
-            Console.WriteLine("totalFrames = " + totalFrames);
-            Console.WriteLine("itnitalFrames = " + initialFrames);
-            Console.WriteLine("streams = " + streams);
-            Console.WriteLine("suggestedBufferSize = " + suggestedBufferSize);
-            Console.WriteLine("width = " + width);
-            Console.WriteLine("height = " + height);
-        }
-
-        public int GetMicroSecPerFrame() {
-            return this.microSecPerFrame;
-        }
-
-        public int GetTotalFrames() {
-            return this.totalFrames;
-        }
-
-        public int GetWidth() {
-            return this.width;
-        }
-
-        public int GetHeight() {
-            return this.height;
+            Console.WriteLine("fcc = " + Fcc);
+            Console.WriteLine("cb = " + Cb);
+            Console.WriteLine("microSecPerFrame = " + MicroSecPerFrame);
+            Console.WriteLine("maxBytesPerSec = " + MaxBytesPerSec);
+            Console.WriteLine("paddingGranularity = " + PaddingGranularity);
+            Console.WriteLine("flags = " + Flags);
+            Console.WriteLine("totalFrames = " + TotalFrames);
+            Console.WriteLine("itnitalFrames = " + InitialFrames);
+            Console.WriteLine("streams = " + Streams);
+            Console.WriteLine("suggestedBufferSize = " + SuggestedBufferSize);
+            Console.WriteLine("width = " + Width);
+            Console.WriteLine("height = " + Height);
         }
     }
 
     public class AviStreamHeader {
-        private String fcc;
-        private int cb;
-        private String fccType;
-        private int fccHandler;
-        private int flags;
-        private short priority;
-        private short language;
-        private int initialFrames;
-        private int scale;
-        private int rate;
-        private int start;
-        private int length;
-        private int suggetedBufferSize;
-        private int quality;
-        private int sampleSize;
-        private RcFrame rcFrame;
+        public String Fcc
+        {
+            get;
+            private set;
+        }
+        public int Cb
+        {
+            get;
+            private set;
+        }
+        public String FccType
+        {
+            get;
+            private set;
+        }
+        public int FccHandler
+        {
+            get;
+            private set;
+        }
+        public int Flags
+        {
+            get;
+            private set;
+        }
+        public short Priority
+        {
+            get;
+            private set;
+        }
+        public short Language
+        {
+            get;
+            private set;
+        }
+        public int InitialFrames
+        {
+            get;
+            private set;
+        }
+        public int Scale
+        {
+            get;
+            private set;
+        }
+        public int Rate
+        {
+            get;
+            private set;
+        }
+        public int Start
+        {
+            get;
+            private set;
+        }
+        public int Length
+        {
+            get;
+            private set;
+        }
+        public int SuggetedBufferSize
+        {
+            get;
+            private set;
+        }
+        public int Quality
+        {
+            get;
+            private set;
+        }
+        public int SampleSize
+        {
+            get;
+            private set;
+        }
+        public RcFrame RCFrame
+        {
+            get;
+            private set;
+        }
 
-        class RcFrame {
-            private short left;
-            private short top;
-            private short right;
-            private short buttom;
+        public class RcFrame {
+            public short Left
+            {
+                get;
+                private set;
+            }
+            public short Top
+            {
+                get;
+                private set;
+            }
+            public short Right
+            {
+                get;
+                private set;
+            }
+            public short Buttom
+            {
+                get;
+                private set;
+            }
 
             public RcFrame(ref byte[] contents, long offset) {
                 byte[] wleft = {contents[offset++], contents[offset++]};
                 byte[] wtop = {contents[offset++], contents[offset++]};
                 byte[] wright = {contents[offset++], contents[offset++]};
                 byte[] wbottom = {contents[offset++], contents[offset++]};
-                left = BitConverter.ToInt16(wleft, 0);
-                top = BitConverter.ToInt16(wtop, 0);
-                right = BitConverter.ToInt16(wright, 0);
-                buttom = BitConverter.ToInt16(wbottom, 0);
+                Left = BitConverter.ToInt16(wleft, 0);
+                Top = BitConverter.ToInt16(wtop, 0);
+                Right = BitConverter.ToInt16(wright, 0);
+                Buttom = BitConverter.ToInt16(wbottom, 0);
             }
             public void Print() {
-                Console.WriteLine("left = " + left);
-                Console.WriteLine("top = " + top);
-                Console.WriteLine("right = " + right);
-                Console.WriteLine("buttom = " + buttom);
+                Console.WriteLine("left = " + Left);
+                Console.WriteLine("top = " + Top);
+                Console.WriteLine("right = " + Right);
+                Console.WriteLine("buttom = " + Buttom);
             }
         }
 
@@ -351,62 +463,115 @@ namespace Avi_Movie_Player
             byte[] dwSuggestedBufferSize = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
             byte[] dwQuality = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
             byte[] dwSampleSize = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
-            this.rcFrame = new RcFrame(ref contents, offset);
+            this.RCFrame = new RcFrame(ref contents, offset);
 
-            fcc = Encoding.ASCII.GetString(dwfcc);
-            cb = BitConverter.ToInt32(dwcb, 0);
-            fccType = Encoding.ASCII.GetString(dwfccType);
-            fccHandler = BitConverter.ToInt32(dwfccHandler, 0);
-            flags = BitConverter.ToInt32(dwFlags, 0);
-            priority = BitConverter.ToInt16(wPriority, 0);
-            language = BitConverter.ToInt16(wLanguage, 0);
-            initialFrames = BitConverter.ToInt32(dwInitialFrames, 0);
-            scale = BitConverter.ToInt32(dwScale, 0);
-            rate = BitConverter.ToInt32(dwRate, 0);
-            start = BitConverter.ToInt32(dwStart, 0);
-            length = BitConverter.ToInt32(dwLength, 0);
-            suggetedBufferSize = BitConverter.ToInt32(dwSuggestedBufferSize, 0);
-            quality = BitConverter.ToInt32(dwQuality, 0);
-            sampleSize = BitConverter.ToInt32(dwSampleSize, 0);
+            Fcc = Encoding.ASCII.GetString(dwfcc);
+            Cb = BitConverter.ToInt32(dwcb, 0);
+            FccType = Encoding.ASCII.GetString(dwfccType);
+            FccHandler = BitConverter.ToInt32(dwfccHandler, 0);
+            Flags = BitConverter.ToInt32(dwFlags, 0);
+            Priority = BitConverter.ToInt16(wPriority, 0);
+            Language = BitConverter.ToInt16(wLanguage, 0);
+            InitialFrames = BitConverter.ToInt32(dwInitialFrames, 0);
+            Scale = BitConverter.ToInt32(dwScale, 0);
+            Rate = BitConverter.ToInt32(dwRate, 0);
+            Start = BitConverter.ToInt32(dwStart, 0);
+            Length = BitConverter.ToInt32(dwLength, 0);
+            SuggetedBufferSize = BitConverter.ToInt32(dwSuggestedBufferSize, 0);
+            Quality = BitConverter.ToInt32(dwQuality, 0);
+            SampleSize = BitConverter.ToInt32(dwSampleSize, 0);
         }
 
         public void Print() {
-            Console.WriteLine("fcc = " + fcc);
-            Console.WriteLine("cb = " + cb);
-            Console.WriteLine("fccType = " + fccType);
-            Console.WriteLine("fccHandler = " + fccHandler);
-            Console.WriteLine("flags = " + flags);
-            Console.WriteLine("priority = " + priority);
-            Console.WriteLine("language = " + language);
-            Console.WriteLine("initialFrames = " + initialFrames);
-            Console.WriteLine("scale = " + scale);
-            Console.WriteLine("rate = " + rate);
-            Console.WriteLine("start = " + start);
-            Console.WriteLine("length = " + length);
-            Console.WriteLine("suggetedBufferSize = " + suggetedBufferSize);
-            Console.WriteLine("quality = " + quality);
-            Console.WriteLine("sampleSize = " + sampleSize);
-            this.rcFrame.Print();
+            Console.WriteLine("fcc = " + Fcc);
+            Console.WriteLine("cb = " + Cb);
+            Console.WriteLine("fccType = " + FccType);
+            Console.WriteLine("fccHandler = " + FccHandler);
+            Console.WriteLine("flags = " + Flags);
+            Console.WriteLine("priority = " + Priority);
+            Console.WriteLine("language = " + Language);
+            Console.WriteLine("initialFrames = " + InitialFrames);
+            Console.WriteLine("scale = " + Scale);
+            Console.WriteLine("rate = " + Rate);
+            Console.WriteLine("start = " + Start);
+            Console.WriteLine("length = " + Length);
+            Console.WriteLine("suggetedBufferSize = " + SuggetedBufferSize);
+            Console.WriteLine("quality = " + Quality);
+            Console.WriteLine("sampleSize = " + SampleSize);
+            this.RCFrame.Print();
         }
     }
 
 
     public class BitmapInfo {
-        private BitmapInfoHeader bitmapHeader;
-        private RGBQuad rgb;
+        public BitmapInfoHeader BitmapHeader
+        {
+            get;
+            private set;
+        }
+        public RGBQuad Rgb
+        {
+            get;
+            private set;
+        }
 
-        class BitmapInfoHeader {
-            private int size;
-            private int width;
-            private int height;
-            private short planes;
-            private short bitCount;
-            private int compression;
-            private int sizeImage;
-            private int xPelsPerMeter;
-            private int yPelsPerMeter;
-            private int clrUserd;
-            private int clrImportant;
+
+        public class BitmapInfoHeader {
+            public int Size
+            {
+                get;
+                private set;
+            }
+            public int Width
+            {
+                get;
+                private set;
+            }
+            public int Height
+            {
+                get;
+                private set;
+            }
+            public short Planes
+            {
+                get;
+                private set;
+            }
+            public short BitCount
+            {
+                get;
+                private set;
+            }
+            public int Compression
+            {
+                get;
+                private set;
+            }
+            public int SizeImage
+            {
+                get;
+                private set;
+            }
+            public int XPelsPerMeter
+            {
+                get;
+                private set;
+            }
+            public int YPelsPerMeter
+            {
+                get;
+                private set;
+            }
+            public int ClrUserd
+            {
+                get;
+                private set;
+            }
+            public int ClrImportant
+            {
+                get;
+                private set;
+            }
 
             public BitmapInfoHeader(ref byte[] contents, long offset) {
                 byte[] biSize = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
@@ -420,75 +585,119 @@ namespace Avi_Movie_Player
                 byte[] biYPelsPerMeter = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
                 byte[] biClrUsed = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
                 byte[] biClrImportant = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
-                size = BitConverter.ToInt32(biSize, 0);
-                width = BitConverter.ToInt32(biWidth, 0);
-                height = BitConverter.ToInt32(biHeight, 0);
-                planes = BitConverter.ToInt16(biPlanes, 0);
-                bitCount = BitConverter.ToInt16(biBitCount, 0);
-                compression = BitConverter.ToInt32(biCompression, 0);
-                sizeImage = BitConverter.ToInt32(biSizeImage, 0);
-                xPelsPerMeter = BitConverter.ToInt32(biXPelsPerMeter, 0);
-                yPelsPerMeter = BitConverter.ToInt32(biYPelsPerMeter, 0);
-                clrUserd = BitConverter.ToInt32(biClrUsed, 0);
-                clrImportant = BitConverter.ToInt32(biClrImportant, 0);
+                Size = BitConverter.ToInt32(biSize, 0);
+                Width = BitConverter.ToInt32(biWidth, 0);
+                Height = BitConverter.ToInt32(biHeight, 0);
+                Planes = BitConverter.ToInt16(biPlanes, 0);
+                BitCount = BitConverter.ToInt16(biBitCount, 0);
+                Compression = BitConverter.ToInt32(biCompression, 0);
+                SizeImage = BitConverter.ToInt32(biSizeImage, 0);
+                XPelsPerMeter = BitConverter.ToInt32(biXPelsPerMeter, 0);
+                YPelsPerMeter = BitConverter.ToInt32(biYPelsPerMeter, 0);
+                ClrUserd = BitConverter.ToInt32(biClrUsed, 0);
+                ClrImportant = BitConverter.ToInt32(biClrImportant, 0);
             }
 
             public void Print() {
-                Console.WriteLine("size = " + size);
-                Console.WriteLine("width = " + width);
-                Console.WriteLine("height = " + height);
-                Console.WriteLine("planes = " + planes);
-                Console.WriteLine("bitCount = " + bitCount);
-                Console.WriteLine("compression = " + compression);
-                Console.WriteLine("sizeImage = " + sizeImage);
-                Console.WriteLine("xPelsPerMeter = " + xPelsPerMeter);
-                Console.WriteLine("yPelsPerMeter = " + yPelsPerMeter);
-                Console.WriteLine("clrUserd = " + clrUserd);
-                Console.WriteLine("clrImportant = " + clrImportant);
+                Console.WriteLine("size = " + Size);
+                Console.WriteLine("width = " + Width);
+                Console.WriteLine("height = " + Height);
+                Console.WriteLine("planes = " + Planes);
+                Console.WriteLine("bitCount = " + BitCount);
+                Console.WriteLine("compression = " + Compression);
+                Console.WriteLine("sizeImage = " + SizeImage);
+                Console.WriteLine("xPelsPerMeter = " + XPelsPerMeter);
+                Console.WriteLine("yPelsPerMeter = " + YPelsPerMeter);
+                Console.WriteLine("clrUserd = " + ClrUserd);
+                Console.WriteLine("clrImportant = " + ClrImportant);
             }
         }
 
-        class RGBQuad {
-            private byte rgbBlue;
-            private byte rgbGreen;
-            private byte rgbRed;
-            private byte rgbReserved;
+        public class RGBQuad {
+            public byte RgbBlue
+            {
+                get;
+                private set;
+            }
+            public byte RgbGreen
+            {
+                get;
+                private set;
+            }
+            public byte RgbRed
+            {
+                get;
+                private set;
+            }
+            public byte RgbReserved
+            {
+                get;
+                private set;
+            }
 
             public RGBQuad(ref byte[] contents, long offset) {
-                rgbBlue = contents[offset++];
-                rgbGreen = contents[offset++];
-                rgbRed = contents[offset++];
-                rgbReserved = contents[offset++];
+                RgbBlue = contents[offset++];
+                RgbGreen = contents[offset++];
+                RgbRed = contents[offset++];
+                RgbReserved = contents[offset++];
             }
 
             public void Print() {
-                Console.WriteLine("rgbBlue = " + rgbBlue);
-                Console.WriteLine("rgbGreen = " + rgbGreen);
-                Console.WriteLine("rgbRed = " + rgbRed);
-                Console.WriteLine("rgbReserved = " + rgbReserved);
+                Console.WriteLine("rgbBlue = " + RgbBlue);
+                Console.WriteLine("rgbGreen = " + RgbGreen);
+                Console.WriteLine("rgbRed = " + RgbRed);
+                Console.WriteLine("rgbReserved = " + RgbReserved);
 
             }
         }
 
         public BitmapInfo(ref byte[] contents, long offset) {
-            bitmapHeader = new BitmapInfoHeader(ref contents, offset);
-            rgb = new RGBQuad(ref contents, offset);
+            BitmapHeader = new BitmapInfoHeader(ref contents, offset);
+            Rgb = new RGBQuad(ref contents, offset);
         }
 
         public void Print() {
-            bitmapHeader.Print();
-            rgb.Print();
+            BitmapHeader.Print();
+            Rgb.Print();
         }
     }
 
     public class WaveFormatEX {
-        private short formatTag;
-        private short channels;
-        private int samplesPerSec;
-        private int avgBytesPerSec;
-        private short blockAlign;
-        private short bitsPerSample;
-        private short cbSize;
+        public short FormatTag
+        {
+            get;
+            private set;
+        }
+        public short Channels
+        {
+            get;
+            private set;
+        }
+        public int SamplesPerSec
+        {
+            get;
+            private set;
+        }
+        public int AvgBytesPerSec
+        {
+            get;
+            private set;
+        }
+        public short BlockAlign
+        {
+            get;
+            private set;
+        }
+        public short BitsPerSample
+        {
+            get;
+            private set;
+        }
+        public short CbSize
+        {
+            get;
+            private set;
+        }
 
         public WaveFormatEX(ref byte[] contents, long offset) {
             byte[] wFormatTag = {contents[offset++], contents[offset++]};
@@ -499,72 +708,98 @@ namespace Avi_Movie_Player
             byte[] wBitsPerSample = {contents[offset++], contents[offset++]};
             byte[] wcbSize = {contents[offset++], contents[offset++]};
 
-            formatTag = BitConverter.ToInt16(wFormatTag, 0);
-            channels = BitConverter.ToInt16(nChannels, 0);
-            samplesPerSec = BitConverter.ToInt32(nSamplesPerSec, 0);
-            avgBytesPerSec = BitConverter.ToInt32(nAvgBytesPerSec, 0);
-            blockAlign = BitConverter.ToInt16(nBlockAlign, 0);
-            bitsPerSample = BitConverter.ToInt16(wBitsPerSample, 0);
-            cbSize = BitConverter.ToInt16(wcbSize, 0);
+            FormatTag = BitConverter.ToInt16(wFormatTag, 0);
+            Channels = BitConverter.ToInt16(nChannels, 0);
+            SamplesPerSec = BitConverter.ToInt32(nSamplesPerSec, 0);
+            AvgBytesPerSec = BitConverter.ToInt32(nAvgBytesPerSec, 0);
+            BlockAlign = BitConverter.ToInt16(nBlockAlign, 0);
+            BitsPerSample = BitConverter.ToInt16(wBitsPerSample, 0);
+            CbSize = BitConverter.ToInt16(wcbSize, 0);
         }
         public void Print() {
-            Console.WriteLine("formatTag = " + formatTag);
-            Console.WriteLine("channels = " + channels);
-            Console.WriteLine("samplesPerSec = " + samplesPerSec);
-            Console.WriteLine("avgBytesPerSec = " + avgBytesPerSec);
-            Console.WriteLine("blockAlign = " + blockAlign);
-            Console.WriteLine("bitsPerSample = " + bitsPerSample);
-            Console.WriteLine("cbSize = " + cbSize);
+            Console.WriteLine("formatTag = " + FormatTag);
+            Console.WriteLine("channels = " + Channels);
+            Console.WriteLine("samplesPerSec = " + SamplesPerSec);
+            Console.WriteLine("avgBytesPerSec = " + AvgBytesPerSec);
+            Console.WriteLine("blockAlign = " + BlockAlign);
+            Console.WriteLine("bitsPerSample = " + BitsPerSample);
+            Console.WriteLine("cbSize = " + CbSize);
         }
     }
 
     public class AviOldIndex {
-        private string fcc;
-        private int cb;
-        private List<AviOldIndexEntry> videoEntry = new List<AviOldIndexEntry>();
-        private List<AviOldIndexEntry> audioEntry = new List<AviOldIndexEntry>();
+        public string Fcc
+        {
+            get;
+            private set;
+        }
+        public int Cb
+        {
+            get;
+            private set;
+        }
+        public List<AviOldIndexEntry> VideoEntry
+        {
+            get;
+            private set;
+        }
+        public List<AviOldIndexEntry> AudioEntry
+        {
+            get;
+            private set;
+        }
 
         public AviOldIndex(ref byte[] contents, long offset) {
+            this.VideoEntry = new List<AviOldIndexEntry>();
+            this.AudioEntry = new List<AviOldIndexEntry>();
             byte[] dwfcc = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
             byte[] dwcb = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
-            this.fcc = Encoding.ASCII.GetString(dwfcc);
-            this.cb = BitConverter.ToInt32(dwcb, 0);
+            this.Fcc = Encoding.ASCII.GetString(dwfcc);
+            this.Cb = BitConverter.ToInt32(dwcb, 0);
         }
 
         public void AddEntrys(ref byte[] contents, long offset) {
             AviOldIndexEntry aviOldIndexEntry = new AviOldIndexEntry(ref contents, offset);
-            if (aviOldIndexEntry.GetChunkId().Equals("00dc")) {
-                videoEntry.Add(aviOldIndexEntry);
-            } else if (aviOldIndexEntry.GetChunkId().Equals("01wb")) {
-                audioEntry.Add(aviOldIndexEntry);
+            if (aviOldIndexEntry.ChunkId.Equals("00dc")) {
+                VideoEntry.Add(aviOldIndexEntry);
+            } else if (aviOldIndexEntry.ChunkId.Equals("01wb")) {
+                AudioEntry.Add(aviOldIndexEntry);
             }
         }
 
         public void Print() {
-            Console.WriteLine("fcc = " + fcc);
-            Console.WriteLine("cb = " + cb);
-            foreach(AviOldIndexEntry entry in videoEntry) {
+            Console.WriteLine("fcc = " + Fcc);
+            Console.WriteLine("cb = " + Cb);
+            foreach(AviOldIndexEntry entry in VideoEntry) {
                 entry.Print();
             }
-            foreach(AviOldIndexEntry entry in audioEntry) {
+            foreach(AviOldIndexEntry entry in AudioEntry) {
                 entry.Print();
             }
-        }
-
-        public List<AviOldIndexEntry> GetVideoEntry() {
-            return this.videoEntry;
-        }
-
-        public List<AviOldIndexEntry> GetAudioEntry() {
-            return this.audioEntry;
         }
     }
 
     public class AviOldIndexEntry {
-        private String chunkId;
-        private int flags;
-        private int offset;
-        private int size;
+        public String ChunkId
+        {
+            get;
+            private set;
+        }
+        public int Flags
+        {
+            get;
+            private set;
+        }
+        public int Offset
+        {
+            get;
+            private set;
+        }
+        public int Size
+        {
+            get;
+            private set;
+        }
 
         public AviOldIndexEntry(ref byte[] contents, long offset) {
             byte[] dwChunkId = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
@@ -572,33 +807,17 @@ namespace Avi_Movie_Player
             byte[] dwOffset = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
             byte[] dwSize = {contents[offset++], contents[offset++], contents[offset++], contents[offset++]};
 
-            this.chunkId = Encoding.ASCII.GetString(dwChunkId);
-            this.flags = BitConverter.ToInt32(dwFlags, 0);
-            this.offset = BitConverter.ToInt32(dwOffset, 0);
-            this.size = BitConverter.ToInt32(dwSize, 0);
+            this.ChunkId = Encoding.ASCII.GetString(dwChunkId);
+            this.Flags = BitConverter.ToInt32(dwFlags, 0);
+            this.Offset = BitConverter.ToInt32(dwOffset, 0);
+            this.Size = BitConverter.ToInt32(dwSize, 0);
         }
 
         public void Print() {
-            Console.WriteLine("chunkId = " + chunkId);
-            Console.WriteLine("flags = " + flags);
-            Console.WriteLine("offset = " + offset);
-            Console.WriteLine("size = " + size);
-        }
-
-        public String GetChunkId() {
-            return this.chunkId;
-        }
-
-        public int GetFlags() {
-            return this.flags;
-        }
-
-        public int GetOffset() {
-            return this.offset;
-        }
-
-        public int GetSize() {
-            return this.size;
+            Console.WriteLine("chunkId = " + ChunkId);
+            Console.WriteLine("flags = " + Flags);
+            Console.WriteLine("offset = " + Offset);
+            Console.WriteLine("size = " + Size);
         }
     }
 }
