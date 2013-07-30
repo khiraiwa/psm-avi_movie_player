@@ -93,6 +93,7 @@ Please see AppMain.cs.
 
 There are some way of creating avi movie files.
 For one, I express the method using ffmpeg.
+
 Run the following command.
 
     $ ffmpeg -i [input video] -vcodec mjpeg -acodec mp3 output.avi
