@@ -25,6 +25,7 @@ namespace Avi_Movie_Player
 public class AppMain
 {
     private static Movie movie;
+    private static MoviePlayer player;
     private static GraphicsContext sm_GraphicsContext = null;
 
     static bool loop = true;
@@ -41,10 +42,10 @@ public class AppMain
         Term();
     }
 
-    static void InitUI()
+    static void InitUI(MoviePlayer player)
     {
         UISystem.Initialize(sm_GraphicsContext);
-        Scene scene = new MoviePlayerScene();
+        Scene scene = new MoviePlayerScene(player);
         UISystem.SetScene(scene);
     }
 
@@ -73,10 +74,13 @@ public class AppMain
 
     public static bool Init()
     {
-        movie = new Movie();
         InitGraphicsContext();
+
+        movie = new Movie();
         movie.Init(sm_GraphicsContext);
-        InitUI();
+        player = movie.CreatePlayer();
+
+        InitUI(player);
 
         return true;
     }

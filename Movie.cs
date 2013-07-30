@@ -65,9 +65,13 @@ namespace Avi_Movie_Player
         public State state = State.None;
 
 
+        private MoviePlayer player;
+
         public Movie ()
         {
-            this.requestUtil = new HttpRequestUtil();
+            requestUtil = new HttpRequestUtil();
+            player = MoviePlayer.getInstance(this);
+            player.Init();
         }
 
         public void Init(GraphicsContext graphicsContext) {
@@ -231,6 +235,8 @@ namespace Avi_Movie_Player
         {
             if (!File.Exists(filePath)) {
                 Console.WriteLine("{0} does not exist.", filePath);
+                ErrorDialog errorDialog = new ErrorDialog();
+                errorDialog.Show();
                 return;
             }
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
@@ -386,6 +392,10 @@ namespace Avi_Movie_Player
     
                 state = State.Stop;
             }
+        }
+
+        public MoviePlayer CreatePlayer() {
+            return player;
         }
     }
 }

@@ -47,6 +47,9 @@
     <Compile Include="BusyIndicatorDialog.composer.cs" />
     <Compile Include="BusyIndicatorDialog.cs" />
     <Compile Include="AppMain.cs" />
+    <Compile Include="MoviePlayer.cs" />
+    <Compile Include="ErrorDialog.composer.cs" />
+    <Compile Include="ErrorDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="lib\SampleLib\SampleLib.csproj">

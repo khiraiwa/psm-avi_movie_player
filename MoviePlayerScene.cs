@@ -9,14 +9,12 @@ namespace Avi_Movie_Player
 {
     public partial class MoviePlayerScene : Scene
     {
-        private bool isPlay;
-        private bool isResume;
-        private bool isPause;
-        private bool isStop;
+        private MoviePlayer player;
 
-        public MoviePlayerScene()
+        public MoviePlayerScene(MoviePlayer player)
         {
             InitializeWidget();
+            this.player = player;
             this.Button_Play.TouchEventReceived += new EventHandler<TouchEventArgs>(playButtonClick);
             this.Button_Resume.TouchEventReceived += new EventHandler<TouchEventArgs>(resumeButtonClick);
             this.Button_Pause.TouchEventReceived += new EventHandler<TouchEventArgs>(pauseButtonClick);
@@ -25,51 +23,39 @@ namespace Avi_Movie_Player
         }
 
         private void playButtonClick(object sender, TouchEventArgs e) {
-            if (!isPlay) {
-                isPlay = true;
-                isResume = false;
-                isPause = false;
-                isStop = false;
+            MoviePlayer.State status = player.Status;
+            if (status != MoviePlayer.State.Play) {
                 this.Button_Resume.Visible = true;
                 this.Button_Play.Visible = false;
                 Uri uri = new Uri(this.UriText.Text);
-                AppMain.GetMovie().Play(uri);
+                player.Play(uri);
             }
         }
 
         private void resumeButtonClick(object sender, TouchEventArgs e) {
-            if (!isResume) {
-                isPlay = false;
-                isResume = true;
-                isPause = false;
-                isStop = false;
-                AppMain.GetMovie().Resume();
+            MoviePlayer.State status = player.Status;
+            if (status != MoviePlayer.State.Resume) {
+                player.Resume();
             }
 
         }
 
         private void pauseButtonClick(object sender, TouchEventArgs e) {
-            if (isStop) {
+            MoviePlayer.State status = player.Status;
+            if (status == MoviePlayer.State.Stop) {
                 return;
             }
-            if (!isPause) {
-                isPlay = false;
-                isResume = false;
-                isPause = true;
-                isStop = false;
-                AppMain.GetMovie().Pause();
+            if (status != MoviePlayer.State.Pause) {
+                player.Pause();
             }
         }
 
         private void stopButtonClick(object sender, TouchEventArgs e) {
-            if (!isStop) {
-                isPlay = false;
-                isResume = false;
-                isPause = false;
-                isStop = true;
+            MoviePlayer.State status = player.Status;
+            if (status != MoviePlayer.State.Stop) {
                 this.Button_Play.Visible = true;
                 this.Button_Resume.Visible = false;
-                AppMain.GetMovie().Stop();
+                player.Stop();
             }
         }
 
