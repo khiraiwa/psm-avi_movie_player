@@ -130,24 +130,32 @@ namespace Avi_Movie_Player
                 videoStreamHeader = new AviStreamHeader(ref bs, index);
                 searchIndex(ref bs, size, ref index, "strf", ref reader);
                                 Console.WriteLine(index + totalOffset);
-                int bitmapInfoSize = 41;
+                int bitmapInfoSize = 44 + 8;
                 shiftIndex(ref bs, size, ref index, bitmapInfoSize, ref reader);
-                bitmapInfo = new BitmapInfo(ref bs, index);
+                bitmapInfo = new BitmapInfo(ref bs, index + 8);
                 searchIndex(ref bs, size, ref index, "strh", ref reader);
                                 Console.WriteLine(index + totalOffset);
                 shiftIndex(ref bs, size, ref index, strhSize, ref reader);
                 audioStreamHeader = new AviStreamHeader(ref bs, index);
                 searchIndex(ref bs, size, ref index, "strf", ref reader);
                                 Console.WriteLine(index + totalOffset);
-                int waveFormatSize = 24;
+                int waveFormatSize = 24 + 8;
                 shiftIndex(ref bs, size, ref index, waveFormatSize, ref reader);
-                waveFormatEX = new WaveFormatEX(ref bs, index);
+                waveFormatEX = new WaveFormatEX(ref bs, index + 8);
 
-            //    mainHeader.print();
-            //    videoStreamHeader.print();
-            //    bitmapInfo.print();
-            //    audioStreamHeader.print();
-            //    waveFormatEX.print();
+                Console.WriteLine("videoheader start");
+                videoStreamHeader.Print();
+                Console.WriteLine("videoheader end");
+                Console.WriteLine("bitmap start");
+                bitmapInfo.Print();
+                Console.WriteLine("bitmap end");
+                Console.WriteLine("audioheader start");
+                audioStreamHeader.Print();
+                Console.WriteLine("audioheader end");
+                Console.WriteLine("wave start");
+                waveFormatEX.Print();
+                Console.WriteLine("wave end");
+
                 searchIndex(ref bs, size, ref index, "movi", ref reader);
                 this.moviIndex = index + totalOffset;
 
@@ -382,9 +390,7 @@ namespace Avi_Movie_Player
         }
     }
 
-    /**
-     * バグってる
-     */
+
     public class BitmapInfo {
         private BitmapInfoHeader bitmapHeader;
         private RGBQuad rgb;
@@ -475,9 +481,6 @@ namespace Avi_Movie_Player
         }
     }
 
-    /**
-     * バグってる
-     */
     public class WaveFormatEX {
         private short formatTag;
         private short channels;

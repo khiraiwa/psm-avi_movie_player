@@ -75,29 +75,22 @@ public class AppMain
     {
         movie = new Movie();
         InitGraphicsContext();
-        if (null != movie) {
-            movie.Init(sm_GraphicsContext);
-        }
+        movie.Init(sm_GraphicsContext);
         InitUI();
 
         return true;
     }
 
-    /// Terminate
     public static void Term()
     {
-        if (null != movie) {
-            movie.Term();
-        }
+        movie.Term();
         TermUI();
         TermGraphicsContext();
     }
 
     public static bool Update()
     {
-        if (null != movie) {
-            movie.Update();
-        }
+        movie.Update();
         UpdateUI();
         return true;
     }
@@ -113,9 +106,7 @@ public class AppMain
         }
 
         RenderBackground();
-        if (null != movie) {
-            movie.Render();
-        }
+        movie.Render();
         RenderUI();
         sm_GraphicsContext.SwapBuffers();
 

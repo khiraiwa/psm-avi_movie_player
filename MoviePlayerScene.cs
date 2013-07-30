@@ -21,7 +21,7 @@ namespace Avi_Movie_Player
             this.Button_Resume.TouchEventReceived += new EventHandler<TouchEventArgs>(resumeButtonClick);
             this.Button_Pause.TouchEventReceived += new EventHandler<TouchEventArgs>(pauseButtonClick);
             this.Button_Stop.TouchEventReceived += new EventHandler<TouchEventArgs>(stopButtonClick);
-            this.UriText.Text = "file:///Application/contents/output.avi";
+            this.UriText.Text = "file:///Documents/contents/output.avi";
         }
 
         private void playButtonClick(object sender, TouchEventArgs e) {
