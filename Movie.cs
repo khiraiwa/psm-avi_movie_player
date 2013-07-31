@@ -35,6 +35,7 @@ namespace Avi_Movie_Player
         private Bgm bgm;
         private BgmPlayer bgmPlayer;
         private BusyIndicatorDialog dialog = null;
+        private ErrorDialog errorDialog = null;
 
         // Buffer for Sprite (Atmic)
         static object sm_LockObjectForBuffer = new object();
@@ -63,12 +64,11 @@ namespace Avi_Movie_Player
             Stop
         }
         public State state = State.None;
-
-
         private MoviePlayer player;
 
         public Movie ()
         {
+            errorDialog = new ErrorDialog();
             requestUtil = new HttpRequestUtil();
             player = MoviePlayer.getInstance(this);
             player.Init();
@@ -231,11 +231,12 @@ namespace Avi_Movie_Player
         }
         ////////////////////////////////////////////////////////////////
 
-        private void readLocalMovie(String filePath)
+        private bool readLocalMovie(String filePath)
         {
             if (!File.Exists(filePath)) {
                 Console.WriteLine("{0} does not exist.", filePath);
-                return;
+                showErrorDialog(filePath + " does not exist.");
+                return false;
             }
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
             RIFFParser parser = new RIFFParser();
@@ -253,7 +254,7 @@ namespace Avi_Movie_Player
 
             Console.WriteLine("Tick: " + DateTime.Now.Ticks);
             writeMp3Data(movieFileDir + "/" + fileName);
-
+            return true;
         }
 
         private void writeMp3Data(String filePath)
@@ -288,11 +289,16 @@ namespace Avi_Movie_Player
             }
         }
 
-        public void Play(Uri uri)
+        public void Play(String uri)
         {
             openDialog();
-            this.targetUri = uri;
-            this.fileName = uri.Segments[uri.Segments.Length - 1];
+            try {
+                this.targetUri = new Uri(uri);
+            } catch(System.UriFormatException ure) {
+                showErrorDialog(ure.Message);
+                return;
+            }
+            this.fileName = targetUri.Segments[targetUri.Segments.Length - 1];
             if (state == State.None || state == State.Stop) {
                 if (targetUri.Scheme == "http") {
                     movieFileDir = "/Documents";
@@ -303,15 +309,28 @@ namespace Avi_Movie_Player
                     movieFileDir = targetUri.AbsolutePath.Replace("/" + fileName, "");
                     Thread thread = new Thread(new ThreadStart(startMovie));
                     thread.Start();
+                } else {
+                    showErrorDialog("This scheme is unknown.: " + targetUri.Scheme);
+                    return;
                 }
             }
+        }
+
+        private void showErrorDialog(String message) {
+            MovieThreadUtility.InvokeLator(closeDialog);
+            errorDialog.SetText(message);
+            MovieThreadUtility.InvokeLator(errorDialog.OpenDialog);
+            state = State.Stop;
         }
 
         private void startMovie(object sender, EventArgs e) {
             startMovie();
         }
         private void startMovie() {
-            readLocalMovie(movieFileDir + "/" + fileName);
+            bool isRead = readLocalMovie(movieFileDir + "/" + fileName);
+            if (!isRead) {
+                return;
+            }
             bgm = new Bgm(outputDir + "/" + fileName + ".mp3");
             bgmPlayer = bgm.CreatePlayer();
             bgmPlayer.Volume = 1.0F;

@@ -27,7 +27,7 @@ namespace Avi_Movie_Player
             Label_1.Name = "Label_1";
 
             // Button_1
-            Button_1.TextColor = new UIColor(0f / 255f, 0f / 255f, 0f / 255f, 255f / 255f);
+            Button_1.TextColor = new UIColor(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
             Button_1.TextFont = new UIFont(FontAlias.System, 25, FontStyle.Regular);
 
             // Label_1
@@ -81,8 +81,8 @@ namespace Avi_Movie_Player
                     Button_1.Anchors = Anchors.None;
                     Button_1.Visible = true;
 
-                    Label_1.SetPosition(51, 40);
-                    Label_1.SetSize(405, 148);
+                    Label_1.SetPosition(39, 40);
+                    Label_1.SetSize(417, 148);
                     Label_1.Anchors = Anchors.None;
                     Label_1.Visible = true;
 

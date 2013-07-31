@@ -63,7 +63,7 @@ Currently, this project supports scheme of http and file.
 For example,
 
     http://127.0.0.1/output.avi
-    file:///Documents/contents/output.avi
+    file:///Application/contents/output.avi
 
 ## Usage
 The class of Avi_Movie_Player.Movie is important.

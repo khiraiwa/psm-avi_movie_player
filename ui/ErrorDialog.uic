@@ -55,13 +55,13 @@
             <TextAlpha>100</TextAlpha>
             <TextColor xmlns:d7p1="http://schemas.datacontract.org/2004/07/System.Windows.Media">
               <d7p1:A>255</d7p1:A>
-              <d7p1:B>0</d7p1:B>
-              <d7p1:G>0</d7p1:G>
-              <d7p1:R>0</d7p1:R>
+              <d7p1:B>255</d7p1:B>
+              <d7p1:G>255</d7p1:G>
+              <d7p1:R>255</d7p1:R>
               <d7p1:ScA>1</d7p1:ScA>
-              <d7p1:ScB>0</d7p1:ScB>
-              <d7p1:ScG>0</d7p1:ScG>
-              <d7p1:ScR>0</d7p1:ScR>
+              <d7p1:ScB>1</d7p1:ScB>
+              <d7p1:ScG>1</d7p1:ScG>
+              <d7p1:ScR>1</d7p1:ScR>
             </TextColor>
             <TextFont xmlns:d7p1="http://schemas.datacontract.org/2004/07/UIComposer.ModelData">
               <d7p1:FontFamily>System</d7p1:FontFamily>
@@ -104,9 +104,9 @@
           <Nodes />
           <LayoutProperty>
             <LayoutProperty>
-              <X>51</X>
+              <X>39</X>
               <Y>40</Y>
-              <Width>405</Width>
+              <Width>417</Width>
               <Height>148</Height>
               <Visible>true</Visible>
               <Anchors>None</Anchors>

@@ -63,9 +63,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ui\" />
+    <Folder Include="contents\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
   <ItemGroup>
     <None Include="MIT-LICENSE.txt" />
+    <None Include="contents\output.avi" />
   </ItemGroup>
 </Project>

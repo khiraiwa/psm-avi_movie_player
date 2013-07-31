@@ -36,60 +36,14 @@ namespace Avi_Movie_Player
 
         }
 
-        public bool Play(Uri uri) {
+        public bool Play(String uri) {
             if (Status != State.Play) {
                 Status = State.Play;
-               // openDialog();
-
                 movie.Play(uri);
-
                 return true;
             }
             return false;
         }
-
-        private void startMovie(object sender, EventArgs e) {
-            startMovie();
-        }
-        private void startMovie() {
-            /*
-            bool isReadSuccess = false;
-            try {
-                isReadSuccess = readLocalMovie(movieFileDir + "/" + fileName);
-            } catch (System.IndexOutOfRangeException ioe) {
-                Console.WriteLine(ioe);
-                closeDialog();
-                return;
-            }
-            if (!isReadSuccess) {
-                closeDialog();
-                return;
-            }
-
-            bgm = new Bgm(outputDir + "/" + fileName + ".mp3");
-            bgmPlayer = bgm.CreatePlayer();
-            bgmPlayer.Volume = 1.0F;
-            bgmPlayer.Play();
-            m_BaseTime = DateTime.Now;
-            state = State.Play;
-            */
-        }
-
-        private void openDialog() {
-            dialog = new BusyIndicatorDialog();
-            FadeInEffect fadeInEffect = new FadeInEffect(dialog, 500, FadeInEffectInterpolator.Linear);
-
-            //fadeInEffect.Start();
-            dialog.Show(fadeInEffect);
-        }
-
-        private void closeDialog() {
-            FadeOutEffect fadeOutEffect = new FadeOutEffect(
-                    dialog, 500, FadeOutEffectInterpolator.Linear);
-            fadeOutEffect.Start();
-            dialog.Hide(fadeOutEffect);
-        }
-
 
         public bool Stop() {
             if (Status != State.Stop && Status != State.None) {
