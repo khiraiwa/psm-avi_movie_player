@@ -81,8 +81,8 @@ namespace Avi_Movie_Player
 
         public void Update()
         {
+            MovieThreadUtility.Run();
             if (!isInitialized && state == State.Play) {
-                closeDialog();
                 InitTexture2D();
                 InitSampleSprite();
                 isInitialized = true;
@@ -318,6 +318,7 @@ namespace Avi_Movie_Player
             bgmPlayer.Play();
             m_BaseTime = DateTime.Now;
             state = State.Play;
+            MovieThreadUtility.InvokeLator(closeDialog);
         }
 
         private void openDialog() {

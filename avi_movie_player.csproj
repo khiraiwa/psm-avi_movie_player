@@ -43,7 +43,6 @@
     <Compile Include="BinaryUtil.cs" />
     <Compile Include="AppMain.cs" />
     <Compile Include="MoviePlayer.cs" />
-    <Compile Include="MainThreadUtility.cs" />
     <Compile Include="ui\BusyIndicatorDialog.composer.cs" />
     <Compile Include="ui\BusyIndicatorDialog.cs" />
     <Compile Include="ui\ErrorDialog.composer.cs" />
@@ -51,6 +50,7 @@
     <Compile Include="ui\MoviePlayerScene.composer.cs" />
     <Compile Include="ui\MoviePlayerScene.cs" />
     <Compile Include="ui\UIStringTable.cs" />
+    <Compile Include="MovieThreadUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="lib\SampleLib\SampleLib.csproj">
