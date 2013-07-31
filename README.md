@@ -14,6 +14,9 @@ Currently it supports the following video and audio type.
 PSM SDK isn't supported playing movie.
 So I created this program.
 
+## Software license
+The MIT License (MIT)
+
 ## Requirements
 * PSM SDK 1.11.01
 * PSM Development Assistant 1.11.01

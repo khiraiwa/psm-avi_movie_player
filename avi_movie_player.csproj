@@ -8,8 +8,8 @@
     <ProjectGuid>{741B8085-F498-4231-8F96-D3480CEF5C37}</ProjectGuid>
     <ProjectTypeGuids>{69878862-DA7D-4DC6-B0A1-50D8FAB4242F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>avi_video_player</RootNamespace>
-    <AssemblyName>avi_video_player</AssemblyName>
+    <RootNamespace>Avi_Movie_Player</RootNamespace>
+    <AssemblyName>avi_movie_player</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,19 +38,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RIFFParser.cs" />
-    <Compile Include="UIStringTable.cs" />
     <Compile Include="Movie.cs" />
     <Compile Include="HttpRequestUtil.cs" />
     <Compile Include="BinaryUtil.cs" />
-    <Compile Include="MoviePlayerScene.composer.cs" />
-    <Compile Include="MoviePlayerScene.cs" />
-    <Compile Include="BusyIndicatorDialog.composer.cs" />
-    <Compile Include="BusyIndicatorDialog.cs" />
     <Compile Include="AppMain.cs" />
     <Compile Include="MoviePlayer.cs" />
-    <Compile Include="ErrorDialog.composer.cs" />
-    <Compile Include="ErrorDialog.cs" />
     <Compile Include="MainThreadUtility.cs" />
+    <Compile Include="ui\BusyIndicatorDialog.composer.cs" />
+    <Compile Include="ui\BusyIndicatorDialog.cs" />
+    <Compile Include="ui\ErrorDialog.composer.cs" />
+    <Compile Include="ui\ErrorDialog.cs" />
+    <Compile Include="ui\MoviePlayerScene.composer.cs" />
+    <Compile Include="ui\MoviePlayerScene.cs" />
+    <Compile Include="ui\UIStringTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="lib\SampleLib\SampleLib.csproj">
@@ -62,10 +62,10 @@
     <PsmMetadata Include="app.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="contents\" />
+    <Folder Include="ui\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
   <ItemGroup>
-    <None Include="contents\output.avi" />
+    <None Include="MIT-LICENSE.txt" />
   </ItemGroup>
 </Project>
