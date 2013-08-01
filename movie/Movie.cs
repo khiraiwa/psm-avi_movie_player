@@ -81,7 +81,7 @@ namespace Avi_Movie_Player
 
         public void Update()
         {
-            MovieThreadUtility.Run();
+            MovieThreadUtil.Run();
             if (!isInitialized && state == State.Play) {
                 InitTexture2D();
                 InitSampleSprite();
@@ -317,9 +317,9 @@ namespace Avi_Movie_Player
         }
 
         private void showErrorDialog(String message) {
-            MovieThreadUtility.InvokeLator(closeDialog);
+            MovieThreadUtil.InvokeLator(closeDialog);
             errorDialog.SetText(message);
-            MovieThreadUtility.InvokeLator(errorDialog.OpenDialog);
+            MovieThreadUtil.InvokeLator(errorDialog.OpenDialog);
             state = State.Stop;
         }
 
@@ -337,7 +337,7 @@ namespace Avi_Movie_Player
             bgmPlayer.Play();
             m_BaseTime = DateTime.Now;
             state = State.Play;
-            MovieThreadUtility.InvokeLator(closeDialog);
+            MovieThreadUtil.InvokeLator(closeDialog);
         }
 
         private void openDialog() {

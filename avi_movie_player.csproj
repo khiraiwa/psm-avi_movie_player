@@ -37,12 +37,7 @@
     <Reference Include="Sce.PlayStation.HighLevel.UI" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RIFFParser.cs" />
-    <Compile Include="Movie.cs" />
-    <Compile Include="HttpRequestUtil.cs" />
-    <Compile Include="BinaryUtil.cs" />
     <Compile Include="AppMain.cs" />
-    <Compile Include="MoviePlayer.cs" />
     <Compile Include="ui\BusyIndicatorDialog.composer.cs" />
     <Compile Include="ui\BusyIndicatorDialog.cs" />
     <Compile Include="ui\ErrorDialog.composer.cs" />
@@ -50,7 +45,12 @@
     <Compile Include="ui\MoviePlayerScene.composer.cs" />
     <Compile Include="ui\MoviePlayerScene.cs" />
     <Compile Include="ui\UIStringTable.cs" />
-    <Compile Include="MovieThreadUtility.cs" />
+    <Compile Include="common\BinaryUtil.cs" />
+    <Compile Include="common\HttpRequestUtil.cs" />
+    <Compile Include="common\MovieThreadUtil.cs" />
+    <Compile Include="movie\Movie.cs" />
+    <Compile Include="movie\MoviePlayer.cs" />
+    <Compile Include="movie\RIFFParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="lib\SampleLib\SampleLib.csproj">
@@ -63,11 +63,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ui\" />
-    <Folder Include="contents\" />
+    <Folder Include="common\" />
+    <Folder Include="movie\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
   <ItemGroup>
     <None Include="MIT-LICENSE.txt" />
-    <None Include="contents\output.avi" />
   </ItemGroup>
 </Project>

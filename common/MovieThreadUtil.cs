@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 namespace Avi_Movie_Player
 {
     public delegate void MovieMethod();
-    public class MovieThreadUtility
+    public class MovieThreadUtil
     {
         private static ConcurrentQueue<MovieMethod> methodQueue = new ConcurrentQueue<MovieMethod>();
 
