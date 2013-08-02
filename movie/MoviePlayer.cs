@@ -98,13 +98,14 @@ namespace Avi_Movie_Player
                 }
                 this.fileName = targetUri.Segments[targetUri.Segments.Length - 1];
                 if (Status == State.None || Status == State.Stop) {
-                    String movieFileDir = movie.MovieFileDir;
                     String outputDir    = movie.OutputDir;
                     if (targetUri.Scheme == "http") {
+                        movie.MovieFileDir = outputDir;
                         requestUtil.DownloadFile(targetUri, outputDir + "/" + fileName);
                     } else if (this.targetUri.Scheme == "file") {
-                        fileName = this.targetUri.Segments[targetUri.Segments.Length - 1];
-                        movieFileDir = targetUri.AbsolutePath.Replace("/" + fileName, "");
+                        String filePath = targetUri.AbsolutePath;
+                        int fIndex = filePath.LastIndexOf("/" + fileName);
+                        movie.MovieFileDir = filePath.Substring(0, fIndex);
                         Thread thread = new Thread(new ThreadStart(startMovie));
                         thread.Start();
                     } else {
