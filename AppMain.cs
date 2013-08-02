@@ -32,7 +32,6 @@ public class AppMain
 
     public static void Main(string[] args)
     {
-
         Init();
         while (loop) {
             SystemEvents.CheckEvents();
@@ -51,7 +50,6 @@ public class AppMain
 
     static void TermUI()
     {
-
     }
 
     public static void InitGraphicsContext()
@@ -77,8 +75,8 @@ public class AppMain
         InitGraphicsContext();
 
         movie = new Movie();
-        movie.Init(sm_GraphicsContext);
         player = movie.CreatePlayer();
+        player.Init(sm_GraphicsContext);
 
         InitUI(player);
 
@@ -87,14 +85,14 @@ public class AppMain
 
     public static void Term()
     {
-        movie.Term();
+        player.Term();
         TermUI();
         TermGraphicsContext();
     }
 
     public static bool Update()
     {
-        movie.Update();
+        player.Update();
         UpdateUI();
         return true;
     }
@@ -110,7 +108,7 @@ public class AppMain
         }
 
         RenderBackground();
-        movie.Render();
+        player.Render();
         RenderUI();
         sm_GraphicsContext.SwapBuffers();
 

@@ -12,11 +12,13 @@ namespace Avi_Movie_Player
         private int totalReadSize;
         private const int maxReadSize = 1024;
         private FileStream  dfs = null;
-        private String downloadPath = "/Documents";
         private String fileName;
 
         public ConnectState State = ConnectState.None;
         public event EventHandler Completed;
+        public delegate void ErrorEventHandler(object sender, ErrorEventArgs e);
+        public event ErrorEventHandler ErrorOccurred;
+
 
         public enum ConnectState
         {
@@ -38,6 +40,9 @@ namespace Avi_Movie_Player
             } catch (Exception e) {
                 Console.WriteLine(e);
                 State = ConnectState.Failed;
+                ErrorEventArgs args = new ErrorEventArgs();
+                args.Message = e.Message;
+                OnErrorOccurred(args);
                 return false;
             }
             return true;
@@ -61,6 +66,9 @@ namespace Avi_Movie_Player
             } catch (Exception e) {
                 Console.WriteLine(e);
                 State = ConnectState.Failed;
+                ErrorEventArgs args = new ErrorEventArgs();
+                args.Message = e.Message;
+                OnErrorOccurred(args);
             }
         }
 
@@ -96,6 +104,9 @@ namespace Avi_Movie_Player
             } catch (Exception e) {
                 Console.WriteLine(e);
                 State = ConnectState.Failed;
+                ErrorEventArgs args = new ErrorEventArgs();
+                args.Message = e.Message;
+                OnErrorOccurred(args);
             }
         }
 
@@ -103,6 +114,12 @@ namespace Avi_Movie_Player
         {
             if (Completed != null) {
                 Completed(this, e);
+            }
+        }
+
+        private void OnErrorOccurred(ErrorEventArgs e) {
+            if (ErrorOccurred != null) {
+                ErrorOccurred(this, e);
             }
         }
     }
