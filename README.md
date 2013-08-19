@@ -66,27 +66,31 @@ For example,
     file:///Application/contents/output.avi
 
 ## Usage
-The class of Avi_Movie_Player.Movie is important.
+The classes of Movie and MoviePlayer are important.
 
-Create this class object.
+Create the Movie class object.
 
     Movie movie = new Movie();
     
-Initialize Movie class with an argument of Sce.PlayStation.Core.Graphics.GraphicsContext.
+Then, create the MoviePlayer class object with factory method.
 
-    movie.Init(graphicsContext);
+    MoviePlayer player = movie.CreatePlayer();
+    
+Initialize the MoviePlayer object with an argument of Sce.PlayStation.Core.Graphics.GraphicsContext.
+
+    player.Init(graphicsContext);
 
 Update this object.
 
-    movie.Update();
+    player.Update();
 
 Render  this object.
 
-    movie.Render();
+    player.Render();
 
 Term  this object.
 
-    movie.Term();
+    player.Term();
 
 Please see AppMain.cs.
 
