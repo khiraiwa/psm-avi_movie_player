@@ -18,8 +18,8 @@ So I created this program.
 The MIT License (MIT)
 
 ## Requirements
-* PSM SDK 1.11.01
-* PSM Development Assistant 1.11.01
+* PSM SDK 1.11.01 or later
+* PSM Development Assistant 1.11.01 or later
 
 ## Build
 
